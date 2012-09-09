@@ -48,13 +48,13 @@ public class VCardComponent extends DefaultComponent {
 
     @Override
     protected void afterConfiguration(String uri, String remaining, Endpoint endpoint, Map<String, Object> parameters) throws Exception {
-        VCardEndpoint calendar = (VCardEndpoint) endpoint;
-        if (calendar.getVCardUri() != null) {
+        VCardEndpoint vCard = (VCardEndpoint) endpoint;
+        if (vCard.getVCardUri() != null) {
             // already set so do not change it
             return;
         }
 
-        // recreate calendar uri after we have configured the endpoint so we can use the left over parameters
+        // recreate vCard uri after we have configured the endpoint so we can use the left over parameters
         // for the http feed
         String vCardUri;
         if (!parameters.isEmpty()) {
@@ -65,7 +65,7 @@ public class VCardComponent extends DefaultComponent {
             vCardUri = remaining;
         }
 
-        calendar.setVCardUri(vCardUri);
+        vCard.setVCardUri(vCardUri);
     }
 
 }

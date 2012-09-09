@@ -47,16 +47,18 @@ public class VCardEndpoint extends DefaultPollingEndpoint {
 
 	private String vCardUri;
 	
+	private boolean multipleCards;
+	
 	public VCardEndpoint() {
 	}
 
-	public VCardEndpoint(String endpointUri, VCardComponent vCardComponent, String calendarUri) {
+	public VCardEndpoint(String endpointUri, VCardComponent vCardComponent, String vCardUri) {
         super(endpointUri, vCardComponent);
-        this.vCardUri = calendarUri;
+        this.vCardUri = vCardUri;
     }
 	
 	public Producer createProducer() throws Exception {
-		throw new UnsupportedOperationException("CalendarProducer is not implemented");
+		throw new UnsupportedOperationException("VCardProducer is not implemented");
 	}
 
     public Consumer createConsumer(Processor processor) throws Exception {
@@ -64,7 +66,7 @@ public class VCardEndpoint extends DefaultPollingEndpoint {
 
         VCardPollingConsumer answer = new VCardPollingConsumer(this, processor);
         
-        // ScheduledPollConsumer default delay is 500 millis and that is too often for polling a calendar,
+        // ScheduledPollConsumer default delay is 500 millis and that is too often for polling a vCard,
         // so we override with a new default value. End user can override this value by providing a consumer.delay parameter
         answer.setDelay(VCardPollingConsumer.DEFAULT_CONSUMER_DELAY);
         configureConsumer(answer);
@@ -83,7 +85,15 @@ public class VCardEndpoint extends DefaultPollingEndpoint {
 		this.vCardUri = uri;
 	}
 
-    public Exchange createExchange(Object vCard) {
+    public boolean isMultipleCards() {
+		return multipleCards;
+	}
+
+	public void setMultipleCards(boolean multipleCards) {
+		this.multipleCards = multipleCards;
+	}
+
+	public Exchange createExchange(Object vCard) {
         Exchange exchange = createExchange();
         exchange.getIn().setBody(vCard);
         return exchange;

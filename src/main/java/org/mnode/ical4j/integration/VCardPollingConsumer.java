@@ -34,6 +34,7 @@ package org.mnode.ical4j.integration;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.vcard.VCard;
@@ -56,9 +57,15 @@ public class VCardPollingConsumer extends ScheduledPollConsumer {
 	
 	@Override
 	protected int poll() throws Exception {
-        Object calendar = createCalendar();
-        if (calendar != null) {
-            Exchange exchange = endpoint.createExchange(calendar);
+        Object vCard;
+        if (endpoint.isMultipleCards()) {
+        	vCard = createVCards();
+        }
+        else {
+        	vCard = createVCard();
+        }
+        if (vCard != null) {
+            Exchange exchange = endpoint.createExchange(vCard);
             getProcessor().process(exchange);
             return 1;
         } else {
@@ -66,7 +73,11 @@ public class VCardPollingConsumer extends ScheduledPollConsumer {
         }
 	}
 
-	private VCard createCalendar() throws MalformedURLException, IOException, ParserException {
+	private VCard createVCard() throws MalformedURLException, IOException, ParserException {
 		return new VCardBuilder(new URL(endpoint.getVCardUri()).openStream()).build();
+	}
+
+	private List<VCard> createVCards() throws MalformedURLException, IOException, ParserException {
+		return new VCardBuilder(new URL(endpoint.getVCardUri()).openStream()).buildAll();
 	}
 }

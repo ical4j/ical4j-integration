@@ -40,6 +40,7 @@ import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.mock.MockEndpoint
 import org.apache.camel.impl.DefaultCamelContext
 
+import spock.lang.Ignore;
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -54,20 +55,21 @@ class VCardComponentSpec extends Specification {
 	def cleanup() {
 		camelContext.stop()
 	}
-	
+
+//	@Ignore	
 	def 'test polling consumer'() {
 		setup:
 		RouteBuilder builder = new RouteBuilder() {
 			@Override
 			void configure() throws Exception {
 				from('vcard:file:src/test/resources/vcard-rfc2426.vcf')
-				.to("mock:result")
+				.to("mock:result-1")
 			}
 		}
 		camelContext.addRoutes builder
 		
 		expect:
-		MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint);
+		MockEndpoint mock = camelContext.getEndpoint("mock:result-1", MockEndpoint);
 		mock.expectedMessageCount(1);
 		mock.expectedMessagesMatches(new Predicate() {
 			boolean matches(Exchange exchange) {
@@ -75,6 +77,27 @@ class VCardComponentSpec extends Specification {
 			}
 		})
 		mock.assertIsSatisfied();
-
+	}
+	
+	def 'test polling consumer with multiple cards'() {
+		setup:
+		RouteBuilder builder = new RouteBuilder() {
+			@Override
+			void configure() throws Exception {
+				from('vcard:file:src/test/resources/vcard-rfc2426.vcf?multipleCards=true')
+				.to("mock:result-2")
+			}
+		}
+		camelContext.addRoutes builder
+		
+		expect:
+		MockEndpoint mock = camelContext.getEndpoint("mock:result-2", MockEndpoint);
+		mock.expectedMessageCount(1);
+		mock.expectedMessagesMatches(new Predicate() {
+			boolean matches(Exchange exchange) {
+				exchange.getIn().body[0].class == VCard
+			}
+		})
+		mock.assertIsSatisfied();
 	}
 }
