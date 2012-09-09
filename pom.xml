@@ -99,6 +99,11 @@
             <type>zip</type>
             <scope>provided</scope>
         </dependency>
-  	
+
+        <dependency>
+        	<groupId>net.fortuna.ical4j</groupId>
+        	<artifactId>ical4j-vcard</artifactId>
+        	<version>0.9.3</version>
+        </dependency>
   </dependencies>
 </project>
