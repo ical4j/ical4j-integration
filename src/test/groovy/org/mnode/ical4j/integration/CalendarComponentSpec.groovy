@@ -31,9 +31,11 @@
  */
 package org.mnode.ical4j.integration
 
-import java.util.concurrent.TimeUnit
+import net.fortuna.ical4j.model.Calendar;
 
 import org.apache.camel.CamelContext
+import org.apache.camel.Exchange
+import org.apache.camel.Predicate
 import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.mock.MockEndpoint
 import org.apache.camel.impl.DefaultCamelContext
@@ -67,6 +69,11 @@ class CalendarComponentSpec extends Specification {
 		expect:
 		MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint);
 		mock.expectedMessageCount(1);
+		mock.expectedMessagesMatches(new Predicate() {
+			boolean matches(Exchange exchange) {
+				exchange.getIn().body.class == Calendar
+			}
+		})
 		mock.assertIsSatisfied();
 
 	}
