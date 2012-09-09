@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.mnode.ical4j</groupId>
+  <artifactId>ical4j-integration</artifactId>
+  <version>0.9-SNAPSHOT</version>
+  <name>iCal4j Integration</name>
+  <description>iCalendar support for integration architectures like Apache Camel</description>
+	<url>http://ical4j.sourceforge.net</url>
+	<issueManagement>
+		<system>SourceForge.net</system>
+		<url>https://sourceforge.net/tracker/?group_id=107024</url>
+	</issueManagement>
+	<inceptionYear>2012</inceptionYear>
+	<licenses>
+		<license>
+            <name>iCal4j - License</name>
+			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
+		</license>
+	</licenses>
+	
+	<scm>
+		<connection>scm:hg:http://ical4j.hg.sourceforge.net:8000/hgroot/ical4j/ical4j-extensions</connection>
+		<developerConnection>scm:hg:ssh://fortuna@ical4j.hg.sourceforge.net/hgroot/ical4j/ical4j-extensions</developerConnection>
+		<url>http://ical4j.hg.sourceforge.net/hgweb/ical4j/ical4j-extensions/</url>
+  </scm>
+
+  <build>
+    <plugins>
+           <plugin>
+               <groupId>com.mycila.maven-license-plugin</groupId>
+               <artifactId>maven-license-plugin</artifactId>
+           </plugin>
+           
+           <plugin>
+             <artifactId>maven-jar-plugin</artifactId>
+             <configuration>
+               <archive>  
+                 <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+               </archive> 
+             </configuration>
+           </plugin>  
+           
+		<plugin>   
+			<groupId>org.apache.felix</groupId>
+			<artifactId>maven-bundle-plugin</artifactId>
+               <executions>
+                   <execution>
+                       <id>bundle-manifest</id>
+                       <phase>process-classes</phase>
+                       <goals>
+                           <goal>manifest</goal>
+                       </goals>
+                   </execution>
+               </executions>
+			<configuration>
+				<instructions>
+					<Export-Package>net.fortuna.ical4j.integration.*</Export-Package>
+					<Import-Package>net.fortuna.ical4j.*,org.apache.*,*;resolution:=optional</Import-Package>
+				</instructions>
+			</configuration>
+		</plugin>
+	</plugins>
+  </build>
+  <parent>
+  	<groupId>org.mnode</groupId>
+  	<artifactId>mnode-parent</artifactId>
+  	<version>1.15</version>
+  </parent>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.camel</groupId>
+  		<artifactId>camel-core</artifactId>
+  		<version>2.10.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.mnode.ical4j</groupId>
+  		<artifactId>ical4j</artifactId>
+  		<version>1.0.3</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.codehaus.groovy</groupId>
+  		<artifactId>groovy-all</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.spockframework</groupId>
+  		<artifactId>spock-core</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-classic</artifactId>
+  	</dependency>
+  </dependencies>
+</project>
