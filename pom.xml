@@ -101,9 +101,9 @@
         </dependency>
 
         <dependency>
-        	<groupId>net.fortuna.ical4j</groupId>
+        	<groupId>org.mnode.ical4j</groupId>
         	<artifactId>ical4j-vcard</artifactId>
-        	<version>0.9.3</version>
+        	<version>0.9.5</version>
         </dependency>
   </dependencies>
 </project>
