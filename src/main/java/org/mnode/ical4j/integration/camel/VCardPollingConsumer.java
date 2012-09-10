@@ -29,36 +29,43 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.mnode.ical4j.integration;
+package org.mnode.ical4j.integration.camel;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.vcard.VCard;
+import net.fortuna.ical4j.vcard.VCardBuilder;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.ScheduledPollConsumer;
 
-public class CalendarPollingConsumer extends ScheduledPollConsumer {
+public class VCardPollingConsumer extends ScheduledPollConsumer {
 	
     public static final long DEFAULT_CONSUMER_DELAY = 60 * 1000L;
 
-	private final CalendarEndpoint endpoint;
+	private final VCardEndpoint endpoint;
 	
-	public CalendarPollingConsumer(CalendarEndpoint endpoint, Processor processor) {
+	public VCardPollingConsumer(VCardEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.endpoint = endpoint;
 	}
 	
 	@Override
 	protected int poll() throws Exception {
-        Object calendar = createCalendar();
-        if (calendar != null) {
-            Exchange exchange = endpoint.createExchange(calendar);
+        Object vCard;
+        if (endpoint.isMultipleCards()) {
+        	vCard = createVCards();
+        }
+        else {
+        	vCard = createVCard();
+        }
+        if (vCard != null) {
+            Exchange exchange = endpoint.createExchange(vCard);
             getProcessor().process(exchange);
             return 1;
         } else {
@@ -66,7 +73,11 @@ public class CalendarPollingConsumer extends ScheduledPollConsumer {
         }
 	}
 
-	private Calendar createCalendar() throws MalformedURLException, IOException, ParserException {
-		return Calendars.load(new URL(endpoint.getCalendarUri()));
+	private VCard createVCard() throws MalformedURLException, IOException, ParserException {
+		return new VCardBuilder(new URL(endpoint.getVCardUri()).openStream()).build();
+	}
+
+	private List<VCard> createVCards() throws MalformedURLException, IOException, ParserException {
+		return new VCardBuilder(new URL(endpoint.getVCardUri()).openStream()).buildAll();
 	}
 }

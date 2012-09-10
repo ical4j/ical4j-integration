@@ -29,43 +29,52 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.mnode.ical4j.integration;
+package org.mnode.ical4j.integration.camel
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import net.fortuna.ical4j.model.Calendar;
 
-import org.apache.camel.Endpoint;
-import org.apache.camel.impl.DefaultComponent;
-import org.apache.camel.util.URISupport;
+import org.apache.camel.CamelContext
+import org.apache.camel.Exchange
+import org.apache.camel.Predicate
+import org.apache.camel.builder.RouteBuilder
+import org.apache.camel.component.mock.MockEndpoint
+import org.apache.camel.impl.DefaultCamelContext
 
-public class VCardComponent extends DefaultComponent {
+import spock.lang.Shared
+import spock.lang.Specification
 
-	@Override
-	protected Endpoint createEndpoint(String uri, String remaining,
-			Map<String, Object> parameters) throws Exception {
-		return new VCardEndpoint(uri, this, null);
+class CalendarComponentSpec extends Specification {
+
+	@Shared CamelContext camelContext = new DefaultCamelContext()
+	
+	def setup() {
+		camelContext.start()
 	}
+	
+	def cleanup() {
+		camelContext.stop()
+	}
+	
+	def 'test polling consumer'() {
+		setup:
+		RouteBuilder builder = new RouteBuilder() {
+			@Override
+			void configure() throws Exception {
+				from('ical:http://tzurl.org/zoneinfo/Australia/Melbourne')
+				.to("mock:result")
+			}
+		}
+		camelContext.addRoutes builder
+		
+		expect:
+		MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint);
+		mock.expectedMessageCount(1);
+		mock.expectedMessagesMatches(new Predicate() {
+			boolean matches(Exchange exchange) {
+				exchange.getIn().body.class == Calendar
+			}
+		})
+		mock.assertIsSatisfied();
 
-    @Override
-    protected void afterConfiguration(String uri, String remaining, Endpoint endpoint, Map<String, Object> parameters) throws Exception {
-        VCardEndpoint vCard = (VCardEndpoint) endpoint;
-        if (vCard.getVCardUri() != null) {
-            // already set so do not change it
-            return;
-        }
-
-        // recreate vCard uri after we have configured the endpoint so we can use the left over parameters
-        // for the http feed
-        String vCardUri;
-        if (!parameters.isEmpty()) {
-            Map<String, Object> options = new LinkedHashMap<String, Object>(parameters);
-            String query = URISupport.createQueryString(options);
-            vCardUri = remaining + "?" + query;
-        } else {
-            vCardUri = remaining;
-        }
-
-        vCard.setVCardUri(vCardUri);
-    }
-
+	}
 }

@@ -1,1 +1,1 @@
-class=org.mnode.ical4j.integration.VCardComponent
+class=org.mnode.ical4j.integration.camel.VCardComponent

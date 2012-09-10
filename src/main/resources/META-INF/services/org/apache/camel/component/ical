@@ -1,1 +1,1 @@
-class=org.mnode.ical4j.integration.CalendarComponent
+class=org.mnode.ical4j.integration.camel.CalendarComponent
