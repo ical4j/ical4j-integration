@@ -37,10 +37,12 @@ import net.fortuna.ical4j.model.property.Attach
 
 import org.quartz.JobExecutionContext
 
+import spock.lang.Ignore;
 import spock.lang.Specification
 
 class VAlarmJobSpec extends Specification {
 
+	@Ignore
 	def 'test audio execution'() {
 		setup:
 		def alarm = new ContentBuilder().valarm {
