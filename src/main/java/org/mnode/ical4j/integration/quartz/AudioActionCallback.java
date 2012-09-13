@@ -31,33 +31,9 @@
  */
 package org.mnode.ical4j.integration.quartz;
 
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VAlarm;
-import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Attach;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+public interface AudioActionCallback {
 
-public class VAlarmJob implements Job {
-
-	private final AudioActionCallback audioCallback;
-	
-	public VAlarmJob(AudioActionCallback audioCallback) {
-		this.audioCallback = audioCallback;
-	}
-	
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		try {
-			final VAlarm alarm = (VAlarm) context.get("alarm");
-			
-			if (Action.AUDIO.equals(alarm.getProperty(Property.ACTION))) {
-				final Attach attachment = (Attach) alarm.getProperty(Property.ATTACH);
-				audioCallback.execute(attachment);
-			}
-		} catch (Exception e) {
-			throw new JobExecutionException(e);
-		}
-	}
+	void execute(Attach attachment) throws Exception;
 }

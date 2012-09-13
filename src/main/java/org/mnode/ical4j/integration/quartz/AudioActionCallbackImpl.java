@@ -31,33 +31,44 @@
  */
 package org.mnode.ical4j.integration.quartz;
 
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VAlarm;
-import net.fortuna.ical4j.model.property.Action;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import net.fortuna.ical4j.model.property.Attach;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+public class AudioActionCallbackImpl implements AudioActionCallback {
 
-public class VAlarmJob implements Job {
-
-	private final AudioActionCallback audioCallback;
-	
-	public VAlarmJob(AudioActionCallback audioCallback) {
-		this.audioCallback = audioCallback;
-	}
-	
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		try {
-			final VAlarm alarm = (VAlarm) context.get("alarm");
-			
-			if (Action.AUDIO.equals(alarm.getProperty(Property.ACTION))) {
-				final Attach attachment = (Attach) alarm.getProperty(Property.ATTACH);
-				audioCallback.execute(attachment);
+	public void execute(Attach attachment) throws LineUnavailableException, UnsupportedAudioFileException, IOException, InterruptedException {
+		final ByteArrayInputStream audioIn = new ByteArrayInputStream(attachment.getBinary());
+		final Clip clip = AudioSystem.getClip();
+        AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioIn);
+        clip.open(inputStream);
+        final CountDownLatch lock = new CountDownLatch(1);
+		final LineListener listener = new LineListener() {
+			public void update(LineEvent e) {
+				if (e.getType() == LineEvent.Type.CLOSE || e.getType() == LineEvent.Type.STOP) {
+					lock.countDown();
+				}
 			}
-		} catch (Exception e) {
-			throw new JobExecutionException(e);
-		}
+		};
+		clip.addLineListener(listener);
+        
+        new Thread(new Runnable() {
+        	public void run() {
+        		clip.start();
+    		}
+        }).start();
+        
+        lock.await();
 	}
+
 }

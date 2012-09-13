@@ -50,6 +50,6 @@ class VAlarmJobSpec extends Specification {
 			attach(new Attach(VAlarmJobSpec.getResource('/sample.au').bytes))
 		}
 		
-		new VAlarmJob().execute({ alarm } as JobExecutionContext)
+		new VAlarmJob(new AudioActionCallbackImpl()).execute({ alarm } as JobExecutionContext)
 	}
 }
