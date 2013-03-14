@@ -114,7 +114,7 @@
   <parent>
   	<groupId>org.mnode</groupId>
   	<artifactId>mnode-parent</artifactId>
-  	<version>1.16</version>
+  	<version>1.19-SNAPSHOT</version>
   </parent>
   <dependencies>
   	<dependency>
