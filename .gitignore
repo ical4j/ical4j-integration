@@ -4,3 +4,5 @@ target
 ical4j-integration.iml
 .classpath
 .project
+.gradle
+build
