@@ -78,7 +78,7 @@ signing {
 
 scmVersion {
     tag {
-        prefix = 'ical4j'
+        prefix = 'ical4j-integration'
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = [
