@@ -35,7 +35,6 @@ import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VEvent;
-
 import org.quartz.Calendar;
 
 public class EventCalendar implements Calendar {
@@ -68,7 +67,7 @@ public class EventCalendar implements Calendar {
 		final PeriodRule rule = new PeriodRule(new Period(dateTime, dateTime));
 		
 		// Calendar returns exclusions..
-		boolean timeIncluded = !rule.match(event);
+		boolean timeIncluded = !rule.evaluate(event);
 		if (!timeIncluded && baseCalendar != null) {
 			timeIncluded = baseCalendar.isTimeIncluded(timeStamp);
 		}
