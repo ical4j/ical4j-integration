@@ -176,7 +176,7 @@ bintray {
     key = bintray_key
     pkg {
         repo = 'maven'
-        name = 'ical4j'
+        name = 'ical4j-integration'
         userOrg = 'ical4j'
         licenses = ['BSD']
         vcsUrl = 'https://github.com/ical4j/ical4j-integration.git'
