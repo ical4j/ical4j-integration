@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.mnode.ical4j:ical4j:2.1.4', 'org.mnode.ical4j:ical4j-vcard:1.0.1',
+    compile 'org.mnode.ical4j:ical4j:2.+', 'org.mnode.ical4j:ical4j-vcard:1.+',
             'org.apache.camel:camel-core:2.13.2', 'org.quartz-scheduler:quartz:2.2.1',
             'org.codehaus.groovy:groovy-all:2.3.6'
 
