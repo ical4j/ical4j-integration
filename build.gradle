@@ -1,11 +1,16 @@
+import aQute.bnd.gradle.Bundle
+
 buildscript {
     repositories {
         mavenCentral()
     }
+    dependencies {
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
+    }
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.8.1'
+    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
 }
@@ -13,7 +18,7 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'groovy'
-apply plugin: 'osgi'
+apply plugin: 'biz.aQute.bnd.builder'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
@@ -22,7 +27,7 @@ apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
 
 group = 'org.mnode.ical4j'
-description = '''
+description = '''\
 iCalendar support for integration architectures like Apache Camel
 '''
 
@@ -55,25 +60,30 @@ javadoc {
     }
 }
 
+task bundle(type: Bundle) {
+    from(project.rootDir) {
+        include "LICENSE.txt"
+    }
+    from sourceSets.main.output
+    bndfile = 'bnd.bnd'
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    archiveClassifier = 'sources'
 }
+
+jar.enabled = false
 
 artifacts {
-    archives jar
+    archives bundle
     archives javadocJar
     archives sourcesJar
-}
-
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
 }
 
 scmVersion {
@@ -169,6 +179,12 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+//    sign configurations.archives
+    sign publishing.publications.mavenArtifacts
 }
 
 bintray {
