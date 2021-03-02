@@ -67,7 +67,7 @@ public class EventCalendar implements Calendar {
 		final PeriodRule rule = new PeriodRule(new Period(dateTime, dateTime));
 		
 		// Calendar returns exclusions..
-		boolean timeIncluded = !rule.evaluate(event);
+		boolean timeIncluded = !rule.test(event);
 		if (!timeIncluded && baseCalendar != null) {
 			timeIncluded = baseCalendar.isTimeIncluded(timeStamp);
 		}
