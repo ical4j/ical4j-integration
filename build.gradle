@@ -36,7 +36,7 @@ targetCompatibility = 1.8
 dependencies {
     compile "org.mnode.ical4j:ical4j:$ical4jVersion", "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion",
         "org.apache.camel:camel-core:$camelVersion", "org.quartz-scheduler:quartz:$quartzVersion",
-        "com.rometools:rome:$romeVersion"
+        "com.rometools:rome:$romeVersion", "com.rometools:rome-modules:$romeVersion"
 
     testCompile "org.codehaus.groovy:groovy:$groovyVersion"
 
