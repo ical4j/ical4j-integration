@@ -5,25 +5,23 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:5.1.2'
     }
 }
 
 plugins {
+    id 'java'
+    id 'groovy'
+    id "biz.aQute.bnd.builder" version "5.1.2"
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'groovy'
-apply plugin: 'biz.aQute.bnd.builder'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
 
 repositories {
@@ -71,13 +69,13 @@ task bundle(type: Bundle) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    archiveClassifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 jar.enabled = false
