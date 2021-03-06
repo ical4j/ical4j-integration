@@ -31,18 +31,17 @@
  */
 package org.mnode.ical4j.integration.camel;
 
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.vcard.VCard;
+import net.fortuna.ical4j.vcard.VCardBuilder;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.support.ScheduledPollConsumer;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.vcard.VCard;
-import net.fortuna.ical4j.vcard.VCardBuilder;
-
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.impl.ScheduledPollConsumer;
 
 public class VCardPollingConsumer extends ScheduledPollConsumer {
 	

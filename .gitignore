@@ -6,4 +6,3 @@ ical4j-integration.iml
 .project
 .gradle
 build
-gradle.properties

@@ -5,46 +5,46 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:5.1.2'
     }
 }
 
 plugins {
+    id 'java'
+    id 'groovy'
+    id "biz.aQute.bnd.builder" version "5.1.2"
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'groovy'
-apply plugin: 'biz.aQute.bnd.builder'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
-
-group = 'org.mnode.ical4j'
-description = '''\
-iCalendar support for integration architectures like Apache Camel
-'''
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile 'org.mnode.ical4j:ical4j:2.+', 'org.mnode.ical4j:ical4j-vcard:1.+',
-            'org.apache.camel:camel-core:2.13.2', 'org.quartz-scheduler:quartz:2.2.1',
-            'org.codehaus.groovy:groovy-all:2.3.6'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0',
-            'org.slf4j:slf4j-log4j12:1.7.25'
+dependencies {
+    compile "org.mnode.ical4j:ical4j:$ical4jVersion", "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion",
+        "org.apache.camel:camel-core:$camelVersion", "org.quartz-scheduler:quartz:$quartzVersion",
+        "com.rometools:rome:$romeVersion", "com.rometools:rome-modules:$romeVersion"
+
+    testCompile "org.codehaus.groovy:groovy:$groovyVersion"
+
+    testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+        "org.spockframework:spock-core",
+        "org.slf4j:slf4j-log4j12:$slf4jVersion"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jacocoTestReport {
@@ -69,13 +69,13 @@ task bundle(type: Bundle) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    archiveClassifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 jar.enabled = false
@@ -85,6 +85,11 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
+group = 'org.mnode.ical4j'
+description = '''\
+iCalendar support for integration architectures like Apache Camel
+'''
 
 scmVersion {
     tag {
@@ -97,64 +102,9 @@ scmVersion {
 }
 version = scmVersion.version
 
-ext {
-    isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-    // sonatype credentials
-    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
-    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
-
-    // bintray credentials
-    bintray_user = project.hasProperty('bintray_user') ? project.getProperty('bintray_user') : ''
-    bintray_key = project.hasProperty('bintray_key') ? project.getProperty('bintray_key') : ''
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            // artefact management
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            // maven project model
-            pom.project {
-                name project.name
-                packaging 'jar'
-                description project.description
-                url 'http://ical4j.github.io'
-                // source code management
-                scm {
-                    url 'https://github.com/ical4j/ical4j-integration'
-                    connection 'scm:git@github.com:ical4j/ical4j-integration.git'
-                    developerConnection 'scm:git@github.com:ical4j/ical4j-integration.git'
-                }
-                // open source license
-                licenses {
-                    license {
-                        name 'iCal4j - License'
-                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
-                        distribution 'repo'
-                    }
-                }
-                // contributors
-                developers {
-                    developer {
-                        id 'fortuna'
-                        name 'Ben Fortuna'
-                    }
-                }
-            }
-        }
-    }
-}
-
 publishing {
     publications {
-        mavenArtifacts(MavenPublication) {
+        ical4j_integration(MavenPublication) {
             from components.java
             artifact javadocJar
             artifact sourcesJar
@@ -179,39 +129,20 @@ publishing {
             }
         }
     }
-}
 
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-//    sign configurations.archives
-    sign publishing.publications.mavenArtifacts
-}
-
-bintray {
-    user = bintray_user
-    key = bintray_key
-    pkg {
-        repo = 'maven'
-        name = 'ical4j-integration'
-        userOrg = 'ical4j'
-        licenses = ['BSD']
-        vcsUrl = 'https://github.com/ical4j/ical4j-integration.git'
-        version {
-            name = scmVersion.version
-            desc = "iCal4j Integration $scmVersion.version"
-            released  = new Date()
-            vcsTag = "ical4j-integration-$scmVersion.version"
-            gpg {
-                sign = isReleaseVersion
-            }
-            mavenCentralSync {
-                sync = isReleaseVersion
-                user = sonatype_username //OSS user token: mandatory
-                password = sonatype_password //OSS user password: mandatory
-//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = version.endsWith('SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
         }
     }
-//    configurations = ['archives']
-    publications = ['mavenArtifacts']
+}
+
+signing {
+    required = true
+    sign publishing.publications.ical4j_integration
 }
