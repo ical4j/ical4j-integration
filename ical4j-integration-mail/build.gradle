@@ -1,0 +1,5 @@
+
+dependencies {
+    api project(":ical4j-integration-core"),
+            "javax.mail:javax.mail-api:$javamailVersion"
+}

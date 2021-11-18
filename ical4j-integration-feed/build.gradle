@@ -1,0 +1,4 @@
+dependencies {
+    api "com.rometools:rome:$romeVersion", "com.rometools:rome-modules:$romeVersion"
+
+}
