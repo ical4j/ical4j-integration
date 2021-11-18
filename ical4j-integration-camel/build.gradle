@@ -1,5 +1,4 @@
-
 dependencies {
-    api "org.apache.camel:camel-core:$camelVersion"
-
+    api project(":ical4j-integration-core"),
+            "org.apache.camel:camel-core:$camelVersion"
 }

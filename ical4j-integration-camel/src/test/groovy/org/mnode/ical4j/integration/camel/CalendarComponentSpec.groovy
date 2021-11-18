@@ -31,7 +31,7 @@
  */
 package org.mnode.ical4j.integration.camel
 
-
+import net.fortuna.ical4j.model.Calendar
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.Predicate
@@ -69,7 +69,7 @@ class CalendarComponentSpec extends Specification {
 		mock.expectedMessageCount(1);
 		mock.expectedMessagesMatches(new Predicate() {
 			boolean matches(Exchange exchange) {
-				exchange.getIn().body.class == java.util.Calendar
+				exchange.getIn().body.class == Calendar
 			}
 		})
 		mock.assertIsSatisfied();

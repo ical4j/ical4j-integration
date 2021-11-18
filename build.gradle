@@ -3,21 +3,13 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.13.1'
 }
 
-group = 'org.mnode.ical4j'
-description = '''\
-iCalendar support for integration architectures like Apache Camel
-'''
-
 scmVersion {
     tag {
-        prefix = 'ical4j-integration'
+        prefix = 'ical4j-integration-'
     }
     versionCreator 'versionWithBranch'
-    branchVersionCreator = [
-            'master': 'simple'
-    ]
+    branchVersionCreator = ['master': 'simple']
 }
-version = scmVersion.version
 
 subprojects {
     apply plugin: 'java-library'
@@ -30,6 +22,12 @@ subprojects {
 
     sourceCompatibility = 8
     targetCompatibility = 8
+
+    group = 'org.mnode.ical4j'
+    description = '''\
+iCalendar support for integration architectures like Apache Camel
+'''
+    version = rootProject.scmVersion.version
 
     dependencies {
         api "org.mnode.ical4j:ical4j:$ical4jVersion",
