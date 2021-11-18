@@ -1,0 +1,4 @@
+dependencies {
+    api project(":ical4j-integration-core"),
+            "com.amazonaws:aws-java-sdk-sns:$awsSdkVersion"
+}
