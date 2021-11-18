@@ -1,0 +1,2 @@
+Export-Package: org.mnode.ical4j.integration.camel.*
+Automatic-Module-Name: org.mnode.ical4j.integration.camel

@@ -1,89 +1,6 @@
-import aQute.bnd.gradle.Bundle
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:5.1.2'
-    }
-}
-
 plugins {
-    id 'java'
-    id 'groovy'
-    id "biz.aQute.bnd.builder" version "5.1.2"
-    id 'java-library'
-    id 'maven-publish'
     id 'signing'
-    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
-    id "nebula.provided-base" version "3.0.3"
-    id "com.jfrog.bintray" version "1.7.3"
-}
-
-apply plugin: 'jacoco'
-apply plugin: 'nebula.optional-base'
-
-repositories {
-    mavenCentral()
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-dependencies {
-    compile "org.mnode.ical4j:ical4j:$ical4jVersion", "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion",
-        "org.apache.camel:camel-core:$camelVersion", "org.quartz-scheduler:quartz:$quartzVersion",
-        "com.rometools:rome:$romeVersion", "com.rometools:rome-modules:$romeVersion"
-
-    testCompile "org.codehaus.groovy:groovy:$groovyVersion"
-
-    testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
-        "org.spockframework:spock-core",
-        "org.slf4j:slf4j-log4j12:$slf4jVersion"
-}
-
-test {
-    useJUnitPlatform()
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
-
-javadoc {
-    if (JavaVersion.current().isJava8Compatible()) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-}
-
-task bundle(type: Bundle) {
-    from(project.rootDir) {
-        include "LICENSE.txt"
-    }
-    from sourceSets.main.output
-    bndfile = 'bnd.bnd'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set('javadoc')
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveClassifier.set('sources')
-}
-
-jar.enabled = false
-
-artifacts {
-    archives bundle
-    archives javadocJar
-    archives sourcesJar
+    id 'pl.allegro.tech.build.axion-release' version '1.13.1'
 }
 
 group = 'org.mnode.ical4j'
@@ -97,52 +14,81 @@ scmVersion {
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = [
-        'master': 'simple'
+            'master': 'simple'
     ]
 }
 version = scmVersion.version
 
-publishing {
-    publications {
-        ical4j_integration(MavenPublication) {
-            from components.java
-            artifact javadocJar
-            artifact sourcesJar
-            pom.withXml {
-                asNode().appendNode('name', project.name)
-                asNode().appendNode('description', project.description)
-                asNode().appendNode('url', 'http://ical4j.github.io')
-
-                def scmNode = asNode().appendNode('scm')
-                scmNode.appendNode('url', 'https://github.com/ical4j/ical4j-integration')
-                scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j-integration.git')
-                scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j-integration.git')
-
-                def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'iCal4j - License')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
-                licenseNode.appendNode('distribution', 'repo')
-
-                def developerNode = asNode().appendNode('developers').appendNode('developer')
-                developerNode.appendNode('id', 'fortuna')
-                developerNode.appendNode('name', 'Ben Fortuna')
-            }
-        }
-    }
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'groovy'
 
     repositories {
-        maven {
-            name = "OSSRH"
-            url = version.endsWith('SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+        mavenCentral()
+    }
+
+    sourceCompatibility = 8
+    targetCompatibility = 8
+
+    dependencies {
+        api "org.mnode.ical4j:ical4j:$ical4jVersion",
+                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion"
+
+        testCompile "org.codehaus.groovy:groovy:$groovyVersion"
+
+        testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+                "org.spockframework:spock-core",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    publishing {
+        publications {
+            ical4j_integration(MavenPublication) {
+                from components.java
+//                artifact javadocJar
+//                artifact sourcesJar
+                pom.withXml {
+                    asNode().appendNode('name', project.name)
+                    asNode().appendNode('description', project.description)
+                    asNode().appendNode('url', 'http://ical4j.github.io')
+
+                    def scmNode = asNode().appendNode('scm')
+                    scmNode.appendNode('url', 'https://github.com/ical4j/ical4j-integration')
+                    scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j-integration.git')
+                    scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j-integration.git')
+
+                    def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                    licenseNode.appendNode('name', 'iCal4j - License')
+                    licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
+                    licenseNode.appendNode('distribution', 'repo')
+
+                    def developerNode = asNode().appendNode('developers').appendNode('developer')
+                    developerNode.appendNode('id', 'fortuna')
+                    developerNode.appendNode('name', 'Ben Fortuna')
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "OSSRH"
+                url = version.endsWith('SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
             }
         }
     }
-}
 
-signing {
-    required = true
-    sign publishing.publications.ical4j_integration
+//    signing {
+//        required = true
+//        sign publishing.publications.ical4j_integration
+//    }
 }
