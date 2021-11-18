@@ -31,12 +31,12 @@
  */
 package org.mnode.ical4j.integration.camel;
 
+import org.apache.camel.Endpoint;
+import org.apache.camel.support.DefaultComponent;
+import org.apache.camel.util.URISupport;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.camel.Endpoint;
-import org.apache.camel.impl.DefaultComponent;
-import org.apache.camel.util.URISupport;
 
 public class VCardComponent extends DefaultComponent {
 

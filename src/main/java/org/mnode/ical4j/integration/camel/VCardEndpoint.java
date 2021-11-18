@@ -35,13 +35,13 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.impl.DefaultPollingEndpoint;
+import org.apache.camel.support.DefaultPollingEndpoint;
 import org.apache.camel.util.ObjectHelper;
 
 public class VCardEndpoint extends DefaultPollingEndpoint {
 	
     /**
-     * Header key for the {@link org.mnode.ical4j.vcard.VCard} object is stored on the in message on the exchange.
+     * Header key for the {@link net.fortuna.ical4j.vcard.VCard} object is stored on the in message on the exchange.
      */
     public static final String CALENDAR_FEED = "CamelVCardFeed";
 
