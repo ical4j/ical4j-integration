@@ -1,10 +1,14 @@
 package org.ical4j.integration.http;
 
+import com.rometools.rome.io.FeedException;
 import net.fortuna.ical4j.model.Calendar;
-import org.apache.http.client.ResponseHandler;
 import org.ical4j.integration.CalendarConsumer;
 import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * HTTP implementation of a calendar transport.
@@ -17,14 +21,10 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
 
     private final String path;
 
-    private final ResponseHandler<Calendar> responseHandler;
-
-    public CalendarHttpTransport(HttpSupport httpSupport, String method, String path,
-                                 ResponseHandler<Calendar> responseHandler) {
+    public CalendarHttpTransport(HttpSupport httpSupport, String method, String path) {
         this.httpSupport = httpSupport;
         this.method = method;
         this.path = path;
-        this.responseHandler = responseHandler;
     }
 
     @Override
@@ -43,13 +43,17 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
 
     @Override
     public Calendar poll(long timeout) throws FailedDeliveryException {
-        switch (method) {
-            case "GET":
-                return httpSupport.get(path, responseHandler);
-            case "POST":
-                return httpSupport.post(path, responseHandler);
-            default:
-                throw new IllegalArgumentException("Unsupported method");
+        try {
+            switch (method) {
+                case "GET":
+                    return httpSupport.get(path);
+                case "POST":
+                    return httpSupport.post(path, "");
+                default:
+                    throw new IllegalArgumentException("Unsupported method");
+            }
+        } catch (IOException | FeedException | URISyntaxException | ParseException e) {
+            throw new FailedDeliveryException(e);
         }
     }
 }

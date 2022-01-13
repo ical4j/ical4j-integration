@@ -7,13 +7,13 @@ import org.apache.http.client.HttpClient;
 
 import java.io.IOException;
 
-public abstract class AbstractHttpSupport implements HttpSupport {
+public abstract class AbstractHttpClientSupport implements HttpSupport {
 
     private final HttpClient httpClient;
 
     private final HttpHost httpHost;
 
-    public AbstractHttpSupport(HttpClient httpClient, HttpHost httpHost) {
+    public AbstractHttpClientSupport(HttpClient httpClient, HttpHost httpHost) {
         this.httpClient = httpClient;
         this.httpHost = httpHost;
     }

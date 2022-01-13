@@ -1,4 +1,4 @@
-package org.mnode.ical4j.integration.feed
+package org.ical4j.integration.http.feed
 
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedOutput

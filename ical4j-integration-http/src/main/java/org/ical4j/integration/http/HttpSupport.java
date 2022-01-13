@@ -1,13 +1,17 @@
 package org.ical4j.integration.http;
 
+import com.rometools.rome.io.FeedException;
 import net.fortuna.ical4j.model.Calendar;
-import org.apache.http.client.ResponseHandler;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 public interface HttpSupport {
 
-    Calendar get(String path, ResponseHandler<Calendar> responseHandler);
+    Calendar get(String path) throws IOException, FeedException, URISyntaxException, ParseException;
 
-    Calendar post(String path, ResponseHandler<Calendar> responseHandler);
+    Calendar post(String path, String query);
 
     void post(String path, Calendar calendar);
 

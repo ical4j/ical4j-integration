@@ -1,4 +1,4 @@
-package org.mnode.ical4j.integration.feed;
+package org.ical4j.integration.http.feed;
 
 import com.rometools.modules.mediarss.MediaEntryModule;
 import com.rometools.modules.mediarss.types.MediaContent;

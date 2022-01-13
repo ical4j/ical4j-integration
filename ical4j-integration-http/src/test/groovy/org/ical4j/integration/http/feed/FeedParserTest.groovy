@@ -1,4 +1,4 @@
-package org.mnode.ical4j.integration.feed
+package org.ical4j.integration.http.feed
 
 import net.fortuna.ical4j.model.Calendar
 import spock.lang.Specification
