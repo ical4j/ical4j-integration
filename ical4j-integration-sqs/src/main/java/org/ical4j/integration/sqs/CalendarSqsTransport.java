@@ -6,8 +6,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import net.fortuna.ical4j.model.Calendar;
 import org.ical4j.integration.CalendarConsumer;
 import org.ical4j.integration.CalendarProducer;
-import org.ical4j.integration.FailedDeliveryException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer {
@@ -22,7 +22,7 @@ public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer 
     }
 
     @Override
-    public Calendar poll(long timeout) throws FailedDeliveryException {
+    public Calendar poll(long timeout) throws IOException {
         List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
         return null;
     }

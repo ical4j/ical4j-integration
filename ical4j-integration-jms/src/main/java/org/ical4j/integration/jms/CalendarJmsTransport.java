@@ -6,6 +6,7 @@ import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
 
 import javax.jms.*;
+import java.io.IOException;
 
 public class CalendarJmsTransport implements CalendarProducer, CalendarConsumer {
 
@@ -19,7 +20,7 @@ public class CalendarJmsTransport implements CalendarProducer, CalendarConsumer 
     }
 
     @Override
-    public Calendar poll(long timeout) throws FailedDeliveryException {
+    public Calendar poll(long timeout) throws IOException {
         MessageConsumer consumer = null;
         try {
             consumer = session.createConsumer(destination);
@@ -27,7 +28,7 @@ public class CalendarJmsTransport implements CalendarProducer, CalendarConsumer 
             //TODO: parse and return calendar object
             return null;
         } catch (JMSException e) {
-            throw new FailedDeliveryException(e);
+            throw new RuntimeException(e);
         }
     }
 

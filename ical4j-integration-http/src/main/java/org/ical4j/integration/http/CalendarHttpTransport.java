@@ -42,7 +42,7 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
     }
 
     @Override
-    public Calendar poll(long timeout) throws FailedDeliveryException {
+    public Calendar poll(long timeout) throws IOException {
         try {
             switch (method) {
                 case "GET":
@@ -52,8 +52,8 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
                 default:
                     throw new IllegalArgumentException("Unsupported method");
             }
-        } catch (IOException | FeedException | URISyntaxException | ParseException e) {
-            throw new FailedDeliveryException(e);
+        } catch (FeedException | URISyntaxException | ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 }
