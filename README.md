@@ -1,9 +1,12 @@
-[![Build Status](https://drone.io/github.com/ical4j/ical4j-integration/status.png)](https://drone.io/github.com/ical4j/ical4j-integration/latest)
+# iCal4j Integration
 
-Enterprise Integration
-======================
+A collection of transport protocol integrations for iCalendar.
 
-iCal4j Integration provides iCalendar support for Enterprise Integration Pattern frameworks such as Apache Camel.
+## Overview
+
+Whilst the iCalendar specification supports data interoperability we also need shared
+transport protocols to exchange these common data formats. This project implements
+support for sharing iCalendar data via the most common transports.
 
 ## Usage
 
