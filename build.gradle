@@ -23,7 +23,7 @@ subprojects {
     sourceCompatibility = 8
     targetCompatibility = 8
 
-    group = 'org.mnode.ical4j'
+    group = 'org.ical4j'
     description = '''\
 iCalendar support for integration architectures like Apache Camel
 '''
