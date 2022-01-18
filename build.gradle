@@ -29,6 +29,10 @@ iCalendar support for integration architectures like Apache Camel
 '''
     version = rootProject.scmVersion.version
 
+    ext {
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
+    }
+
     dependencies {
         api "org.mnode.ical4j:ical4j:$ical4jVersion",
                 "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion"
