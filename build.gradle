@@ -11,7 +11,7 @@ scmVersion {
     branchVersionCreator = ['master': 'simple']
 }
 
-subprojects {
+subprojects { subproject ->
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'groovy'
@@ -52,7 +52,7 @@ iCalendar support for integration architectures like Apache Camel
 
     publishing {
         publications {
-            ical4j(MavenPublication) {
+            "$project.name"(MavenPublication) {
                 from components.java
 //                artifact javadocJar
 //                artifact sourcesJar
@@ -92,6 +92,6 @@ iCalendar support for integration architectures like Apache Camel
 
     signing {
         required { isReleaseVersion }
-        sign publishing.publications.ical4j
+        sign publishing.publications[subproject.name]
     }
 }
