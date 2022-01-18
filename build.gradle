@@ -52,7 +52,7 @@ iCalendar support for integration architectures like Apache Camel
 
     publishing {
         publications {
-            ical4j_integration(MavenPublication) {
+            ical4j(MavenPublication) {
                 from components.java
 //                artifact javadocJar
 //                artifact sourcesJar
@@ -92,6 +92,6 @@ iCalendar support for integration architectures like Apache Camel
 
     signing {
         required { isReleaseVersion }
-        sign publishing.publications.ical4j_integration
+        sign publishing.publications.ical4j
     }
 }
