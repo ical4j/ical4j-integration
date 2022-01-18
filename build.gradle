@@ -23,7 +23,7 @@ subprojects { subproject ->
     sourceCompatibility = 8
     targetCompatibility = 8
 
-    group = 'org.mnode.ical4j'
+    group = 'org.ical4j'
     description = '''\
 iCalendar support for integration architectures like Apache Camel
 '''
@@ -81,7 +81,7 @@ iCalendar support for integration architectures like Apache Camel
         repositories {
             maven {
                 name = "OSSRH"
-                url = version.endsWith('SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                url = version.endsWith('SNAPSHOT') ? "https://s01.oss.sonatype.org/content/repositories/snapshots/" : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
                 credentials {
                     username = System.getenv("MAVEN_USERNAME")
                     password = System.getenv("MAVEN_PASSWORD")
