@@ -86,8 +86,8 @@ iCalendar support for integration architectures like Apache Camel
         }
     }
 
-//    signing {
-//        required = true
-//        sign publishing.publications.ical4j_integration
-//    }
+    signing {
+        required { isReleaseVersion }
+        sign publishing.publications.ical4j_integration
+    }
 }
