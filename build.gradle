@@ -1,6 +1,7 @@
 plugins {
     id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.13.1'
+    id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
 }
 
 scmVersion {
@@ -15,6 +16,7 @@ subprojects { subproject ->
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'groovy'
+    apply plugin: 'biz.aQute.bnd.builder'
 
     repositories {
         mavenCentral()
