@@ -3,6 +3,7 @@ package org.ical4j.integration;
 import net.fortuna.ical4j.model.Calendar;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Implementors of this interface support retrieval of iCalendar data via some transport
@@ -16,5 +17,5 @@ public interface CalendarConsumer {
      * @return the retrieved calendar data
      * @throws IOException if data retrieval fails
      */
-    Calendar poll(long timeout) throws IOException;
+    Optional<Calendar> poll(long timeout) throws IOException;
 }

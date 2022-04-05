@@ -19,8 +19,7 @@ public class CalendarSnsTransport implements CalendarProducer {
 
     @Override
     public void send(Calendar calendar) {
-        PublishRequest request = new PublishRequest()
-                .withMessage("message")
+        PublishRequest request = new PublishRequest().withMessage("message")
                 .withTopicArn(topicArn);
         PublishResult result = sns.publish(request);
     }

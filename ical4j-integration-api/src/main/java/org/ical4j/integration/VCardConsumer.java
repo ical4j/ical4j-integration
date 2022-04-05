@@ -3,6 +3,7 @@ package org.ical4j.integration;
 import net.fortuna.ical4j.vcard.VCard;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public interface VCardConsumer {
 
@@ -12,5 +13,5 @@ public interface VCardConsumer {
      * @return the retrieved calendar data
      * @throws IOException if data retrieval fails
      */
-    VCard poll(long timeout) throws IOException;
+    Optional<VCard> poll(long timeout) throws IOException;
 }

@@ -34,8 +34,13 @@ public class MessageBuilder {
 
     private Session session;
 
-    public MessageBuilder session(Session session) {
+    public MessageBuilder withSession(Session session) {
         this.session = session;
+        return this;
+    }
+
+    public MessageBuilder withCalendar(Calendar calendar) {
+        this.calendar = calendar;
         return this;
     }
 

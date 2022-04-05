@@ -1,8 +1,9 @@
 package org.ical4j.integration.mail;
 
 import javax.mail.Message;
+import java.util.Optional;
 
 public interface MessageParser<T> {
 
-    T parse(Message message);
+    Optional<T> parse(Message message);
 }

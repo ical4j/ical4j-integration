@@ -2,6 +2,7 @@ package org.ical4j.integration;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
+import org.ical4j.integration.event.*;
 
 public interface CalendarListenerSupport {
 

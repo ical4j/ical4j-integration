@@ -7,6 +7,7 @@ import org.ical4j.integration.ListenerList;
 import javax.mail.Message;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
+import java.util.Optional;
 
 public class CalendarMailListener implements MessageCountListener, CalendarListenerSupport {
 
@@ -21,8 +22,8 @@ public class CalendarMailListener implements MessageCountListener, CalendarListe
     @Override
     public void messagesAdded(MessageCountEvent e) {
         for (Message message : e.getMessages()) {
-            Calendar calendar = messageParser.parse(message);
-            fireCalendarEvent(calendar);
+            Optional<Calendar> calendar = messageParser.parse(message);
+            calendar.ifPresent(this::fireCalendarEvent);
         }
     }
 

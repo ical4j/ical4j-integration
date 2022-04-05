@@ -1,6 +1,7 @@
 package org.ical4j.integration;
 
 import net.fortuna.ical4j.vcard.VCard;
+import org.ical4j.integration.event.VCardListener;
 
 public interface VCardListenerSupport {
 

@@ -9,6 +9,7 @@ import org.ical4j.integration.CalendarProducer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer {
 
@@ -22,16 +23,16 @@ public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer 
     }
 
     @Override
-    public Calendar poll(long timeout) throws IOException {
+    public Optional<Calendar> poll(long timeout) throws IOException {
         List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
-        return null;
+        //TODO: parse and return calendar
+        return Optional.empty();
     }
 
     @Override
     public void send(Calendar calendar) {
         SendMessageRequest send_msg_request = new SendMessageRequest()
-                .withQueueUrl(queueUrl)
-                .withMessageBody("hello world")
+                .withQueueUrl(queueUrl).withMessageBody("hello world")
                 .withDelaySeconds(5);
         sqs.sendMessage(send_msg_request);
     }

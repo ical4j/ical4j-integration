@@ -1,4 +1,4 @@
-package org.ical4j.integration;
+package org.ical4j.integration.event;
 
 import net.fortuna.ical4j.vcard.VCard;
 

@@ -9,6 +9,7 @@ import org.ical4j.integration.FailedDeliveryException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Optional;
 
 /**
  * HTTP implementation of a calendar transport.
@@ -20,6 +21,10 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
     private final String method;
 
     private final String path;
+
+    public CalendarHttpTransport(String path) {
+        this(null, "GET", path);
+    }
 
     public CalendarHttpTransport(HttpSupport httpSupport, String method, String path) {
         this.httpSupport = httpSupport;
@@ -42,13 +47,13 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
     }
 
     @Override
-    public Calendar poll(long timeout) throws IOException {
+    public Optional<Calendar> poll(long timeout) throws IOException {
         try {
             switch (method) {
                 case "GET":
-                    return httpSupport.get(path);
+                    return Optional.of(httpSupport.get(path));
                 case "POST":
-                    return httpSupport.post(path, "");
+                    return Optional.of(httpSupport.post(path, ""));
                 default:
                     throw new IllegalArgumentException("Unsupported method");
             }
