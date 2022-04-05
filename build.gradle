@@ -2,6 +2,7 @@ plugins {
     id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.13.1'
     id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
+    id 'org.javamodularity.moduleplugin' version '1.8.10' apply false
 }
 
 scmVersion {
@@ -12,11 +13,12 @@ scmVersion {
     branchVersionCreator = ['master': 'simple']
 }
 
-subprojects { subproject ->
+configure(subprojects) {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'groovy'
     apply plugin: 'biz.aQute.bnd.builder'
+    apply plugin: 'org.javamodularity.moduleplugin'
 
     repositories {
         mavenCentral()
@@ -54,13 +56,13 @@ iCalendar support for integration architectures like Apache Camel
 
     publishing {
         publications {
-            "$project.name"(MavenPublication) {
+            "$name"(MavenPublication) {
                 from components.java
 //                artifact javadocJar
 //                artifact sourcesJar
                 pom.withXml {
-                    asNode().appendNode('name', project.name)
-                    asNode().appendNode('description', project.description)
+                    asNode().appendNode('name', name)
+                    asNode().appendNode('description', description)
                     asNode().appendNode('url', 'http://ical4j.github.io')
 
                     def scmNode = asNode().appendNode('scm')
@@ -94,6 +96,6 @@ iCalendar support for integration architectures like Apache Camel
 
     signing {
         required { isReleaseVersion }
-        sign publishing.publications[subproject.name]
+        sign publishing.publications[name]
     }
 }
