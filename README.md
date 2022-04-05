@@ -88,10 +88,7 @@ Consume calendar object delivered to an email address:
 
 Listen for calendar objects delivered to an email address:
 
-    Session session = ...
-    CalendarConsumer consumer = new CalendarMailTransport(session);
-    Calendar calendar = consumer.poll(30);
-
+TBD.
 
 ### Apache Camel
 
