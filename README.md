@@ -1,3 +1,5 @@
+[Enterprise Integration Patterns]: https://www.enterpriseintegrationpatterns.com/
+
 # iCal4j Integration
 
 A Java API for iCalendar transport protocol integrations.
@@ -5,9 +7,9 @@ A Java API for iCalendar transport protocol integrations.
 ## Overview
 
 Whilst iCal4j provides support for data interoperability via the iCalendar specifation,
-we also need shared transport protocols to exchange data between sytems. This project
-implements support for transporting iCalendar data via some of the more common integration
-transports.
+we also need shared transport protocols to exchange data between sytems. There are many
+proven [Enterprise Integration Patterns] in use today, and this project provides
+support for some of the more common integration approaches.
 
 ### Messaging Polling Model
 
@@ -54,6 +56,44 @@ points implement the Calendar Listener Support that provides the pubsub notifica
 mechanism.
 
 ## Examples
+
+### HTTP
+
+Publish calendar object to HTTP target:
+
+    Calendar calendar = ...
+    CalendarProducer producer = new CalendarHttpTransport(null, "POST", "http://ical.example.com");
+    producer.send(calendar);
+
+Consume calendar object from HTTP endpoint:
+
+    CalendarConsumer consumer = new CalendarHttpTransport("http://tzurl.org/zoneinfo/Australia/Melbourne");
+    Calendar calendar = consumer.poll(30);
+
+
+### Email
+
+Publish calendar object via email:
+
+    Calendar calendar = ...
+    Session session = ...
+    CalendarProducer producer = new CalendarMailTransport(session);
+    producer.send(calendar);
+
+Consume calendar object delivered to an email address:
+
+    Session session = ...
+    CalendarConsumer consumer = new CalendarMailTransport(session);
+    Calendar calendar = consumer.poll(30);
+
+Listen for calendar objects delivered to an email address:
+
+    Session session = ...
+    CalendarConsumer consumer = new CalendarMailTransport(session);
+    Calendar calendar = consumer.poll(30);
+
+
+### Apache Camel
 
 Added the ical4j-integration dependency to your project and configure your routes:
 
