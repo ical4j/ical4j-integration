@@ -1,8 +1,10 @@
 package org.ical4j.integration.http.feed
 
 import net.fortuna.ical4j.model.Calendar
+import spock.lang.Ignore
 import spock.lang.Specification
 
+@Ignore
 class FeedParserTest extends Specification {
 
     def 'Test basic calendar generation'() {
