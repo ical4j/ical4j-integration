@@ -1,6 +1,9 @@
 package org.ical4j.integration.mail;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.validate.ITIPValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.ical4j.integration.CalendarConsumer;
 import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
@@ -15,16 +18,30 @@ public class CalendarMailTransport implements CalendarProducer, CalendarConsumer
 
     private final MessageParser<Calendar> messageParser;
 
+    private MessageTemplate messageTemplate;
+
     public CalendarMailTransport(Session session, MessageParser<Calendar> messageParser) {
         this.session = session;
         this.messageParser = messageParser;
     }
 
+    public CalendarMailTransport withMessageTemplate(MessageTemplate messageTemplate) {
+        this.messageTemplate = messageTemplate;
+        return this;
+    }
+
     @Override
     public void send(Calendar calendar) throws FailedDeliveryException {
+        ITIPValidator validator = new ITIPValidator();
+        ValidationResult result = validator.validate(calendar);
+        if (result.hasErrors()) {
+            throw new ValidationException(result.toString());
+        }
         try {
-            Transport.send(new MessageBuilder().withSession(session)
-                    .withCalendar(calendar).build());
+            Message message = new MessageBuilder().withSession(session)
+                    .withTemplate(messageTemplate)
+                    .withCalendar(calendar).build();
+            Transport.send(message);
         } catch (MessagingException | IOException e) {
             throw new FailedDeliveryException(e);
         }
