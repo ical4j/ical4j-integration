@@ -1,0 +1,7 @@
+dependencies {
+    api project(":ical4j-integration-api"),
+            "javax.servlet:javax.servlet-api:$servletApiVersion"
+    
+    implementation "org.apache.httpcomponents:httpclient:$httpclientVersion",
+            "com.rometools:rome:$romeVersion", "com.rometools:rome-modules:$romeVersion"
+}
