@@ -54,8 +54,33 @@ iCalendar support for integration architectures like Apache Camel
 
     }
 
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier.set('javadoc')
+        from 'build/docs/javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        archiveClassifier.set('sources')
+    }
+
+    artifacts {
+        archives jar
+        archives javadocJar
+        archives sourcesJar
+    }
+
     test {
         useJUnitPlatform()
+    }
+
+    javadoc {
+        if (JavaVersion.current().isJava8Compatible()) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+        options {
+            links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+        }
     }
 
     publishing {
