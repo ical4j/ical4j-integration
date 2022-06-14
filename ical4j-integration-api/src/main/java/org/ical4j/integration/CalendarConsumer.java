@@ -17,5 +17,5 @@ public interface CalendarConsumer {
      * @return the retrieved calendar data
      * @throws IOException if data retrieval fails
      */
-    Optional<Calendar> poll(long timeout) throws IOException;
+    Optional<Calendar> receive(long timeout) throws IOException;
 }
