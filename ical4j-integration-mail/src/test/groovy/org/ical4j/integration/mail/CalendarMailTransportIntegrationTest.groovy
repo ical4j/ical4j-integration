@@ -1,13 +1,11 @@
 package org.ical4j.integration.mail
 
-
+import jakarta.mail.Session
 import net.fortuna.ical4j.model.ContentBuilder
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.spock.Testcontainers
 import spock.lang.Shared
 import spock.lang.Specification
-
-import javax.mail.Session
 
 @Testcontainers
 class CalendarMailTransportIntegrationTest extends Specification {
