@@ -53,7 +53,7 @@ public class FeedParser {
         }
 
         for (SyndEntry entry : feed.getEntries()) {
-            calendar.getComponents().add(createComponent(entry));
+            calendar.add(createComponent(entry));
         }
         return calendar;
     }

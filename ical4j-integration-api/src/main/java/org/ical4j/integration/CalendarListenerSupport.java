@@ -156,7 +156,7 @@ public interface CalendarListenerSupport {
     }
 
     default void fireCalendarEvent(Calendar calendar) {
-        switch (calendar.getProperty(Property.METHOD).getValue()) {
+        switch (calendar.getRequiredProperty(Property.METHOD).getValue()) {
             case "PUBLISH":
                 getCalendarListeners().get(CalendarPublishListener.class)
                     .forEach(listener -> listener.onPublish(calendar));
