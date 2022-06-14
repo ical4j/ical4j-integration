@@ -1,4 +1,4 @@
-package org.ical4j.integration.sqs;
+package org.ical4j.integration.aws.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.Message;
@@ -23,7 +23,7 @@ public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer 
     }
 
     @Override
-    public Optional<Calendar> poll(long timeout) throws IOException {
+    public Optional<Calendar> receive(long timeout) throws IOException {
         List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
         //TODO: parse and return calendar
         return Optional.empty();
