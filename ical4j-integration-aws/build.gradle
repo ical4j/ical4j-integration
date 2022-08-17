@@ -1,0 +1,6 @@
+dependencies {
+    api project(":ical4j-integration-api"),
+            "com.amazonaws:aws-java-sdk-eventbridge:$awsSdkVersion",
+            "com.amazonaws:aws-java-sdk-sns:$awsSdkVersion",
+            "com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion"
+}
