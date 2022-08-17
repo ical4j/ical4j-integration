@@ -1,6 +1,6 @@
 package org.ical4j.integration.jms;
 
-import javax.jms.Message;
+import jakarta.jms.Message;
 import java.util.Optional;
 
 public interface MessageParser<T> {

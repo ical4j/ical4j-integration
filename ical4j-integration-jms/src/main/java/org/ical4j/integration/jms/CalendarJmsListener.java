@@ -4,8 +4,8 @@ import net.fortuna.ical4j.model.Calendar;
 import org.ical4j.integration.CalendarListenerSupport;
 import org.ical4j.integration.ListenerList;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
 
 public class CalendarJmsListener implements MessageListener, CalendarListenerSupport {
 
