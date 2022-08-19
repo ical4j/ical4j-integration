@@ -5,7 +5,7 @@ import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "send-calendar", description = "Send a calendar object to mail recipients")
+@CommandLine.Command(name = "send-calendar", description = "Send a calendar object to producer recipients")
 public class SendCalendarCommand implements Runnable{
 
     private final CalendarProducer producer;

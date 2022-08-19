@@ -5,7 +5,7 @@ import org.ical4j.integration.FailedDeliveryException;
 import org.ical4j.integration.VCardProducer;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "send-card", description = "Send a vCard object to mail recipients")
+@CommandLine.Command(name = "send-card", description = "Send a vCard object to producer recipients")
 public class SendVCardCommand implements Runnable {
 
     private final VCardProducer producer;

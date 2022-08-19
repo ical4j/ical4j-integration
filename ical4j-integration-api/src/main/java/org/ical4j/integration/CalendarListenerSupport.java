@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import org.ical4j.integration.event.*;
 
+
 /**
  * Provide support for notifying calendar listeners of events.
  */
@@ -12,7 +13,7 @@ public interface CalendarListenerSupport {
     ListenerList<Object> getCalendarListeners();
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.PUBLISH} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH} events.
      * @param listener a calendar publish listener
      * @return true if listener was registered successfully
      */
@@ -21,7 +22,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.PUBLISH} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH} events.
      * @param listener a calendar publish listener
      * @return true if listener was unregistered successfully
      */
@@ -30,7 +31,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.REQUEST} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST} events.
      * @param listener a calendar request listener
      * @return true if listener was registered successfully
      */
@@ -39,7 +40,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.REQUEST} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST} events.
      * @param listener a calendar request listener
      * @return true if listener was unregistered successfully
      */
@@ -48,7 +49,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.REPLY} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY} events.
      * @param listener a calendar reply listener
      * @return true if listener was registered successfully
      */
@@ -57,7 +58,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.REPLY} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY} events.
      * @param listener a calendar reply listener
      * @return true if listener was unregistered successfully
      */
@@ -66,7 +67,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.ADD} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD} events.
      * @param listener a calendar add listener
      * @return true if listener was registered successfully
      */
@@ -75,7 +76,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.ADD} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD} events.
      * @param listener a calendar add listener
      * @return true if listener was unregistered successfully
      */
@@ -84,7 +85,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.CANCEL} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL} events.
      * @param listener a calendar cancel listener
      * @return true if listener was registered successfully
      */
@@ -93,7 +94,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.CANCEL} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL} events.
      * @param listener a calendar cancel listener
      * @return true if listener was unregistered successfully
      */
@@ -102,7 +103,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.REFRESH} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH} events.
      * @param listener a calendar refresh listener
      * @return true if listener was registered successfully
      */
@@ -111,7 +112,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.REFRESH} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH} events.
      * @param listener a calendar refresh listener
      * @return true if listener was unregistered successfully
      */
@@ -120,7 +121,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.COUNTER} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER} events.
      * @param listener a calendar counter listener
      * @return true if listener was registered successfully
      */
@@ -129,7 +130,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.COUNTER} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER} events.
      * @param listener a calendar counter listener
      * @return true if listener was unregistered successfully
      */
@@ -138,7 +139,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Register listener for calendar {@link net.fortuna.ical4j.model.property.Method.DECLINE_COUNTER} events.
+     * Register listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER} events.
      * @param listener a calendar decline counter listener
      * @return true if listener was registered successfully
      */
@@ -147,7 +148,7 @@ public interface CalendarListenerSupport {
     }
 
     /**
-     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.Method.DECLINE_COUNTER} events.
+     * Unregister listener for calendar {@link net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER} events.
      * @param listener a calendar decline counter listener
      * @return true if listener was unregistered successfully
      */
