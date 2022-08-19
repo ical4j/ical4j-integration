@@ -5,7 +5,7 @@ import org.ical4j.integration.CalendarConsumer;
 import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import java.io.IOException;
 import java.util.Optional;
 

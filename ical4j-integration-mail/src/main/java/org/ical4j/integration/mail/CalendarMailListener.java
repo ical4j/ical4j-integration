@@ -1,12 +1,12 @@
 package org.ical4j.integration.mail;
 
+import jakarta.mail.Message;
+import jakarta.mail.event.MessageCountEvent;
+import jakarta.mail.event.MessageCountListener;
 import net.fortuna.ical4j.model.Calendar;
 import org.ical4j.integration.CalendarListenerSupport;
 import org.ical4j.integration.ListenerList;
 
-import javax.mail.Message;
-import javax.mail.event.MessageCountEvent;
-import javax.mail.event.MessageCountListener;
 import java.util.Optional;
 
 public class CalendarMailListener implements MessageCountListener, CalendarListenerSupport {

@@ -1,4 +1,4 @@
-package org.ical4j.integration.sns;
+package org.ical4j.integration.aws.sns;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;

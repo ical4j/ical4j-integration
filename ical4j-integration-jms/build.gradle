@@ -1,5 +1,5 @@
 
 dependencies {
     api project(":ical4j-integration-api"),
-            'javax.jms:javax.jms-api:2.0.1'
+            'jakarta.jms:jakarta.jms-api:3.1.0'
 }

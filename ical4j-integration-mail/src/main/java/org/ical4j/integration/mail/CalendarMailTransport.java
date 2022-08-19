@@ -1,5 +1,6 @@
 package org.ical4j.integration.mail;
 
+import jakarta.mail.*;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.validate.ITIPValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -8,7 +9,6 @@ import org.ical4j.integration.CalendarConsumer;
 import org.ical4j.integration.CalendarProducer;
 import org.ical4j.integration.FailedDeliveryException;
 
-import javax.mail.*;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class CalendarMailTransport implements CalendarProducer, CalendarConsumer
     }
 
     @Override
-    public Optional<Calendar> poll(long timeout) {
+    public Optional<Calendar> receive(long timeout) {
         try {
             Store store = session.getStore();
             Folder inbox = store.getDefaultFolder();
