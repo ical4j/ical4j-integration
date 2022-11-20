@@ -12,15 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer {
+public class CalendarFifoSqsTransport implements CalendarProducer, CalendarConsumer {
 
     private final AmazonSQS sqs;
 
     private final String queueUrl;
 
-    public CalendarSqsTransport(AmazonSQS sqs, String queueUrl) {
+    private String messageGroupId;
+
+    public CalendarFifoSqsTransport(AmazonSQS sqs, String queueUrl) {
+        this(sqs, queueUrl, null);
+    }
+
+    public CalendarFifoSqsTransport(AmazonSQS sqs, String queueUrl, String messageGroupId) {
         this.sqs = sqs;
         this.queueUrl = queueUrl;
+        this.messageGroupId = messageGroupId;
     }
 
     @Override
@@ -39,9 +46,14 @@ public class CalendarSqsTransport implements CalendarProducer, CalendarConsumer 
     @Override
     public void send(Calendar calendar) {
         SendMessageRequest send_msg_request = new SendMessageRequest()
-                .withQueueUrl(queueUrl)
+                .withQueueUrl(queueUrl).withMessageGroupId(messageGroupId)
+                .withMessageDeduplicationId(getDeduplicationId(calendar))
                 .withMessageBody(calendar.toString())
                 .withDelaySeconds(5);
         sqs.sendMessage(send_msg_request);
+    }
+
+    private String getDeduplicationId(Calendar calendar) {
+        return String.valueOf(calendar.hashCode());
     }
 }
