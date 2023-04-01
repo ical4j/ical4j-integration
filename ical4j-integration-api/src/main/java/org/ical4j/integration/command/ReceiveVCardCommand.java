@@ -1,35 +1,23 @@
 package org.ical4j.integration.command;
 
 import net.fortuna.ical4j.vcard.VCard;
-import org.ical4j.integration.VCardConsumer;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.function.Consumer;
 
-@CommandLine.Command(name = "receive-cards", description = "Receive vCard objects from consumer stream")
-public class ReceiveVCardCommand implements Runnable {
-
-    private final VCardConsumer consumer;
+@CommandLine.Command(name = "receive-card", description = "Receive vCard objects from consumer stream")
+public class ReceiveVCardCommand extends AbstractEndpointCommand<VCard, VCard> {
 
     private long timeout;
 
-    private Optional<VCard> card;
+    private boolean autoExpunge;
 
-    public ReceiveVCardCommand(VCardConsumer consumer) {
-        this.consumer = consumer;
-    }
-
-    public Optional<VCard> getCard() {
-        return card;
+    public ReceiveVCardCommand(Consumer<VCard> consumer) {
+        super(consumer);
     }
 
     @Override
     public void run() {
-        try {
-            this.card = consumer.poll(timeout);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        getEndpoint().receive(getConsumer(), timeout, autoExpunge);
     }
 }

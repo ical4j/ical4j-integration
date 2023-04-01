@@ -1,2 +1,10 @@
+apply plugin: 'application'
+
 dependencies {
+    runtimeOnly project(':ical4j-integration-mail'), project(':ical4j-integration-http'),
+            project(':ical4j-integration-aws')
+}
+
+application {
+    mainClass = 'org.ical4j.integration.IntegrationCLIMain'
 }

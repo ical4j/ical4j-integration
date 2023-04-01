@@ -1,20 +1,13 @@
 package org.ical4j.integration.command;
 
 import net.fortuna.ical4j.model.Calendar;
-import org.ical4j.integration.CalendarProducer;
-import org.ical4j.integration.FailedDeliveryException;
+import org.ical4j.integration.Message;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "send-calendar", description = "Send a calendar object to producer recipients")
-public class SendCalendarCommand implements Runnable{
-
-    private final CalendarProducer producer;
+public class SendCalendarCommand extends AbstractEndpointCommand<Calendar, Boolean> {
 
     private Calendar calendar;
-
-    public SendCalendarCommand(CalendarProducer producer) {
-        this.producer = producer;
-    }
 
     public SendCalendarCommand withCalendar(Calendar calendar) {
         this.calendar = calendar;
@@ -23,10 +16,6 @@ public class SendCalendarCommand implements Runnable{
 
     @Override
     public void run() {
-        try {
-            producer.send(calendar);
-        } catch (FailedDeliveryException e) {
-            throw new RuntimeException(e);
-        }
+        getConsumer().accept(getEndpoint().send(() -> new Message<>(null, calendar)));
     }
 }

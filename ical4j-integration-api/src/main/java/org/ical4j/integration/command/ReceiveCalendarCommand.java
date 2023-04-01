@@ -1,35 +1,23 @@
 package org.ical4j.integration.command;
 
 import net.fortuna.ical4j.model.Calendar;
-import org.ical4j.integration.CalendarConsumer;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.function.Consumer;
 
-@CommandLine.Command(name = "receive-calendars", description = "Receive calendar objects from consumer stream")
-public class ReceiveCalendarCommand implements Runnable {
-
-    private final CalendarConsumer consumer;
-
-    private Optional<Calendar> calendar;
+@CommandLine.Command(name = "receive-calendar", description = "Receive calendar objects from consumer stream")
+public class ReceiveCalendarCommand extends AbstractEndpointCommand<Calendar, Calendar> {
 
     private long timeout;
 
-    public ReceiveCalendarCommand(CalendarConsumer consumer) {
-        this.consumer = consumer;
-    }
+    private boolean autoExpunge;
 
-    public Optional<Calendar> getCalendar() {
-        return calendar;
+    public ReceiveCalendarCommand(Consumer<Calendar> consumer) {
+        super(consumer);
     }
 
     @Override
     public void run() {
-        try {
-            this.calendar = consumer.receive(timeout);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        getEndpoint().receive(getConsumer(), timeout, autoExpunge);
     }
 }
