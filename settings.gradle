@@ -2,7 +2,7 @@ rootProject.name = 'ical4j-integration'
 
 include 'ical4j-integration-api'
 //include 'ical4j-integration-camel'
-//include 'ical4j-integration-http'
+include 'ical4j-integration-http'
 //include 'ical4j-integration-jms'
 include 'ical4j-integration-mail'
 include 'ical4j-integration-aws'
