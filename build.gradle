@@ -82,12 +82,6 @@ iCalendar support for integration architectures like Apache Camel
         }
     }
 
-    artifacts {
-        archives jar
-        archives javadocJar
-        archives sourcesJar
-    }
-
     test {
         useJUnitPlatform()
     }
@@ -105,8 +99,6 @@ iCalendar support for integration architectures like Apache Camel
         publications {
             "$name"(MavenPublication) {
                 from components.java
-                artifact javadocJar
-                artifact sourcesJar
                 pom.withXml {
                     asNode().appendNode('name', name)
                     asNode().appendNode('description', description)
