@@ -8,7 +8,6 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.util.Calendars;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class MessageBuilder {
 
-    private Calendar calendar;
+    private org.ical4j.integration.Message<Calendar> calendar;
 
     private Session session;
 
@@ -31,7 +30,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder withCalendar(Calendar calendar) {
+    public MessageBuilder withCalendar(org.ical4j.integration.Message<Calendar> calendar) {
         this.calendar = calendar;
         return this;
     }
@@ -45,13 +44,12 @@ public class MessageBuilder {
 //        ByteArrayOutputStream bout = new ByteArrayOutputStream();
         StringWriter sout = new StringWriter();
         CalendarOutputter calout = new CalendarOutputter();
-        calout.output(calendar, sout);
+        calout.output(calendar.getBody(), sout);
 
         MimeBodyPart calpart = new MimeBodyPart();
         calpart.setDisposition(MimeBodyPart.ATTACHMENT);
         calpart.setFileName("calendar.ics");
-        calpart.setContent(sout.toString(),
-                Calendars.getContentType(calendar, StandardCharsets.US_ASCII));
+        calpart.setContent(sout.toString(), calendar.getBody().getContentType(StandardCharsets.US_ASCII));
 
         MimeBodyPart textpart = new MimeBodyPart();
         textpart.setContent(template.getTextBody(), "text/plain; charset=UTF-8");

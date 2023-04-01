@@ -4,9 +4,12 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
 import net.fortuna.ical4j.model.Calendar;
-import org.ical4j.integration.CalendarProducer;
+import org.ical4j.integration.Message;
+import org.ical4j.integration.MessageProducer;
 
-public class CalendarSnsTransport implements CalendarProducer {
+import java.util.function.Supplier;
+
+public class CalendarSnsTransport implements MessageProducer<Calendar> {
 
     private final AmazonSNS sns;
 
@@ -18,9 +21,11 @@ public class CalendarSnsTransport implements CalendarProducer {
     }
 
     @Override
-    public void send(Calendar calendar) {
+    public boolean send(Supplier<Message<Calendar>> calendar) {
         PublishRequest request = new PublishRequest().withMessage("message")
                 .withTopicArn(topicArn);
         PublishResult result = sns.publish(request);
+
+        return true;
     }
 }

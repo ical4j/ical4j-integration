@@ -5,10 +5,12 @@ import com.amazonaws.services.eventbridge.model.PutEventsRequest;
 import com.amazonaws.services.eventbridge.model.PutEventsRequestEntry;
 import com.amazonaws.services.eventbridge.model.PutEventsResult;
 import net.fortuna.ical4j.model.Calendar;
-import org.ical4j.integration.CalendarProducer;
-import org.ical4j.integration.FailedDeliveryException;
+import org.ical4j.integration.Message;
+import org.ical4j.integration.MessageProducer;
 
-public class CalendarEventBridgeTransport implements CalendarProducer {
+import java.util.function.Supplier;
+
+public class CalendarEventBridgeTransport implements MessageProducer<Calendar> {
 
     private final AmazonEventBridge client;
 
@@ -17,11 +19,13 @@ public class CalendarEventBridgeTransport implements CalendarProducer {
     }
 
     @Override
-    public void send(Calendar calendar) throws FailedDeliveryException {
+    public boolean send(Supplier<Message<Calendar>> calendar) {
         PutEventsRequestEntry requestEntry = new PutEventsRequestEntry();
 
         PutEventsRequest request = new PutEventsRequest().withEntries(requestEntry);
 
         PutEventsResult result = client.putEvents(request);
+
+        return true;
     }
 }

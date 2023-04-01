@@ -5,14 +5,14 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.validate.ITIPValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.ical4j.integration.CalendarConsumer;
-import org.ical4j.integration.CalendarProducer;
-import org.ical4j.integration.FailedDeliveryException;
+import org.ical4j.integration.MessageConsumer;
+import org.ical4j.integration.MessageProducer;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class CalendarMailTransport implements CalendarProducer, CalendarConsumer {
+public class CalendarMailTransport implements MessageProducer<Calendar>, MessageConsumer<Calendar> {
 
     private final Session session;
 
@@ -31,24 +31,26 @@ public class CalendarMailTransport implements CalendarProducer, CalendarConsumer
     }
 
     @Override
-    public void send(Calendar calendar) throws FailedDeliveryException {
+    public boolean send(Supplier<org.ical4j.integration.Message<Calendar>> calendar) {
         ITIPValidator validator = new ITIPValidator();
-        ValidationResult result = validator.validate(calendar);
+        ValidationResult result = validator.validate(calendar.get().getBody());
         if (result.hasErrors()) {
             throw new ValidationException(result.toString());
         }
         try {
             Message message = new MessageBuilder().withSession(session)
                     .withTemplate(messageTemplate)
-                    .withCalendar(calendar).build();
+                    .withCalendar(calendar.get()).build();
             Transport.send(message);
+            return true;
         } catch (MessagingException | IOException e) {
-            throw new FailedDeliveryException(e);
+//            throw new FailedDeliveryException(e);
         }
+        return false;
     }
 
     @Override
-    public Optional<Calendar> receive(long timeout) {
+    public boolean receive(Consumer<Calendar> consumer, long timeout, boolean autoExpunge) {
         try {
             Store store = session.getStore();
             Folder inbox = store.getDefaultFolder();
@@ -56,11 +58,12 @@ public class CalendarMailTransport implements CalendarProducer, CalendarConsumer
                 for (int i = 0; i < inbox.getNewMessageCount(); i++) {
                     Message message = inbox.getMessage(i);
                     if (message.isMimeType("text/calendar")) {
-                        return messageParser.parse(message);
+                        consumer.accept(messageParser.parse(message).get());
+                        return true;
                     }
                 }
             }
-            return Optional.empty();
+            return false;
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

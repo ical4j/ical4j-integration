@@ -2,19 +2,20 @@ package org.ical4j.integration.http;
 
 import com.rometools.rome.io.FeedException;
 import net.fortuna.ical4j.model.Calendar;
-import org.ical4j.integration.CalendarConsumer;
-import org.ical4j.integration.CalendarProducer;
-import org.ical4j.integration.FailedDeliveryException;
+import org.ical4j.integration.Message;
+import org.ical4j.integration.MessageConsumer;
+import org.ical4j.integration.MessageProducer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * HTTP implementation of a calendar transport.
  */
-public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer {
+public class CalendarHttpTransport implements MessageProducer<Calendar>, MessageConsumer<Calendar> {
 
     private final HttpSupport httpSupport;
 
@@ -33,32 +34,36 @@ public class CalendarHttpTransport implements CalendarProducer, CalendarConsumer
     }
 
     @Override
-    public void send(Calendar calendar) throws FailedDeliveryException {
+    public boolean send(Supplier<Message<Calendar>> calendar) {
         switch (method) {
             case "POST":
-                httpSupport.post(path, calendar);
+                httpSupport.post(path, calendar.get().getBody());
                 break;
             case "PUT":
-                httpSupport.put(path, calendar);
+                httpSupport.put(path, calendar.get().getBody());
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported method");
         }
+        return true;
     }
 
     @Override
-    public Optional<Calendar> poll(long timeout) throws IOException {
+    public boolean receive(Consumer<Calendar> consumer, long timeout, boolean autoExpunge) {
         try {
             switch (method) {
                 case "GET":
-                    return Optional.of(httpSupport.get(path));
+                    consumer.accept(httpSupport.get(path));
+                    return true;
                 case "POST":
-                    return Optional.of(httpSupport.post(path, ""));
+                    consumer.accept(httpSupport.post(path, ""));
+                    return true;
                 default:
                     throw new IllegalArgumentException("Unsupported method");
             }
-        } catch (FeedException | URISyntaxException | ParseException e) {
-            throw new RuntimeException(e);
+        } catch (FeedException | URISyntaxException | ParseException | IOException e) {
+//            throw new RuntimeException(e);
         }
+        return false;
     }
 }
