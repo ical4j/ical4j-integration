@@ -1,6 +1,6 @@
 package org.ical4j.integration.command;
 
-import org.ical4j.integration.MessageEndpoint;
+import org.ical4j.integration.MessageConsumer;
 
 import java.util.function.Consumer;
 
@@ -10,29 +10,29 @@ import java.util.function.Consumer;
  * @param <T> the supported collection type for a configured data store
  * @param <R> the command result consumer
  */
-public abstract class AbstractEndpointCommand<T, R> extends AbstractCommand<R> {
+public abstract class AbstractConsumerCommand<T, R> extends AbstractCommand<R> {
 
-    private final MessageEndpoint<T> endpoint;
+    private final MessageConsumer<T> endpoint;
 
-    public AbstractEndpointCommand() {
+    public AbstractConsumerCommand() {
         this.endpoint = null;
     }
 
-    public AbstractEndpointCommand(MessageEndpoint<T> endpoint) {
+    public AbstractConsumerCommand(MessageConsumer<T> endpoint) {
         this.endpoint = endpoint;
     }
 
-    public AbstractEndpointCommand(Consumer<R> consumer) {
+    public AbstractConsumerCommand(Consumer<R> consumer) {
         super(consumer);
         this.endpoint = null;
     }
 
-    public AbstractEndpointCommand(Consumer<R> consumer, MessageEndpoint<T> endpoint) {
+    public AbstractConsumerCommand(Consumer<R> consumer, MessageConsumer<T> endpoint) {
         super(consumer);
         this.endpoint = endpoint;
     }
 
-    public MessageEndpoint<T> getEndpoint() {
+    public MessageConsumer<T> getEndpoint() {
         return endpoint;
     }
 }

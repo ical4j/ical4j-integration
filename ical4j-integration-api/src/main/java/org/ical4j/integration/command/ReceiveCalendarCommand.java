@@ -6,7 +6,7 @@ import picocli.CommandLine;
 import java.util.function.Consumer;
 
 @CommandLine.Command(name = "receive-calendar", description = "Receive calendar objects from consumer stream")
-public class ReceiveCalendarCommand extends AbstractEndpointCommand<Calendar, Calendar> {
+public class ReceiveCalendarCommand extends AbstractConsumerCommand<Calendar, Calendar> {
 
     private long timeout;
 

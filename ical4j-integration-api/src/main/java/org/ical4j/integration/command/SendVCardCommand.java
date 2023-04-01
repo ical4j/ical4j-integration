@@ -5,7 +5,7 @@ import org.ical4j.integration.Message;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "send-card", description = "Send a vCard object to producer recipients")
-public class SendVCardCommand extends AbstractEndpointCommand<VCard, Boolean> {
+public class SendVCardCommand extends AbstractProducerCommand<VCard, Boolean> {
 
     private VCard card;
 

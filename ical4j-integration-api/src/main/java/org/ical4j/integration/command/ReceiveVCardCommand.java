@@ -6,7 +6,7 @@ import picocli.CommandLine;
 import java.util.function.Consumer;
 
 @CommandLine.Command(name = "receive-card", description = "Receive vCard objects from consumer stream")
-public class ReceiveVCardCommand extends AbstractEndpointCommand<VCard, VCard> {
+public class ReceiveVCardCommand extends AbstractConsumerCommand<VCard, VCard> {
 
     private long timeout;
 

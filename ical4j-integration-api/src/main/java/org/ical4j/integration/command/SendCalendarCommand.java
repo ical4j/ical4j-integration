@@ -5,7 +5,7 @@ import org.ical4j.integration.Message;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "send-calendar", description = "Send a calendar object to producer recipients")
-public class SendCalendarCommand extends AbstractEndpointCommand<Calendar, Boolean> {
+public class SendCalendarCommand extends AbstractProducerCommand<Calendar, Boolean> {
 
     private Calendar calendar;
 
