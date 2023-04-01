@@ -19,7 +19,7 @@ public class FeedEmitter {
     }
 
     private String getTitle(Calendar calendar) {
-        Name name = calendar.getProperty(Property.NAME);
+        Name name = calendar.getRequiredProperty(Property.NAME);
         return name.getValue();
     }
 }
