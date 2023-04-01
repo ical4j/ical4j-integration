@@ -3,9 +3,9 @@ package org.ical4j.integration.http.feed
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedOutput
 import net.fortuna.ical4j.model.ContentBuilder
-import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.ProdId
-import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.model.property.immutable.ImmutableMethod
+import net.fortuna.ical4j.model.property.immutable.ImmutableVersion
 import spock.lang.Specification
 
 class FeedEmitterTest extends Specification {
@@ -18,8 +18,8 @@ class FeedEmitterTest extends Specification {
         given: 'a calendar'
         def calendar = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.PUBLISH)
+            version(ImmutableVersion.VERSION_2_0)
+            method(ImmutableMethod.PUBLISH)
             name('Test Calendar')
             vevent {
                 organizer 'mailto:org@example.com'
