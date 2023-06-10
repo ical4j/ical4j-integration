@@ -55,8 +55,6 @@ iCalendar support for integration architectures like Apache Camel
 
         implementation "commons-io:commons-io:$commonsIoVersion"
 
-        implementation "info.picocli:picocli:$picocliVersion"
-
         compileOnly 'org.osgi:osgi.core:8.0.0',
                 'org.osgi:org.osgi.service.component.annotations:1.5.0',
                 'org.osgi:org.osgi.service.metatype.annotations:1.4.1',
