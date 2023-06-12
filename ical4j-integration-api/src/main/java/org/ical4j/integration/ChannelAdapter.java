@@ -2,12 +2,18 @@ package org.ical4j.integration;
 
 import java.io.IOException;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
- * Implementors of this interface support retrieval of iCalendar data via some transport
- * protocol. For example, IMAP, POP3, HTTP, etc.
+ * Implementors support content adaptation for transport over a supported channel.
  */
-public interface MessageConsumer<T> {
+public interface ChannelAdapter<T> {
+
+    /**
+     * Invoke transfer of data via supported transport protocol.
+     * @param supplier source of data to transfer
+     */
+    boolean send(Supplier<T> supplier);
 
     default boolean receive(Consumer<T> consumer, long timeout) {
         return receive(consumer, timeout, false);

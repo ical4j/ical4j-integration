@@ -2,14 +2,13 @@ package org.ical4j.integration.mail
 
 import jakarta.mail.Session
 import net.fortuna.ical4j.model.ContentBuilder
-import org.ical4j.integration.Message
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.spock.Testcontainers
 import spock.lang.Shared
 import spock.lang.Specification
 
 @Testcontainers
-class CalendarMailTransportIntegrationTest extends Specification {
+class JakartaMailAdapterIntegrationTest extends Specification {
 
     @Shared
     GenericContainer mailhog = new GenericContainer('mailhog/mailhog')
@@ -29,15 +28,17 @@ class CalendarMailTransportIntegrationTest extends Specification {
 
     def 'assert send calendar functionality works'() {
         given: 'a calendar mail transport instance'
-        CalendarMailTransport transport = [session, null]
-        transport.withMessageTemplate(new MessageTemplate()
-                .withFromAddress("sender@example.com")
-                .withToAddress("recipient@example.com")
-                .withSubject("Test calendar mail transport send")
-                .withTextBody("This is an integration test"))
+        CalendarMessageBuilder builder = new CalendarMessageBuilder().withSession(session)
+            .withTemplate(new MessageTemplate()
+                    .withFromAddress("sender@example.com")
+                    .withToAddress("recipient@example.com")
+                    .withSubject("Test calendar mail transport send")
+                    .withTextBody("This is an integration test"))
+
+        JakartaMailAdapter channel = [session, builder, null]
 
         when: 'a calendar is submitted'
-        transport.send(() -> Message.from(new ContentBuilder().calendar() {
+        channel.send(() -> new ContentBuilder().calendar() {
             prodid '-//Ben Fortuna//iCal4j 3.1//EN'
             version '2.0'
             method 'PUBLISH'
@@ -51,7 +52,7 @@ class CalendarMailTransportIntegrationTest extends Specification {
                 description 'Test Description 2', parameters: parameters { xparameter name: 'x-format', value: 'text/plain' }
                 xproperty 'X-test', value: 'test-value'
             }
-        }))
+        })
 
         then: 'it is successfully sent'
         true
