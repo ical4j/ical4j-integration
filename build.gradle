@@ -11,6 +11,10 @@ scmVersion {
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = ['master': 'simple']
+    nextVersion {
+        suffix = 'pre'
+        separator = '-'
+    }
 }
 
 configure(subprojects) {
@@ -22,6 +26,12 @@ configure(subprojects) {
 
     repositories {
         mavenCentral()
+        maven {
+            url 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
     }
 
     sourceCompatibility = 8
@@ -37,20 +47,17 @@ iCalendar support for integration architectures like Apache Camel
         isReleaseVersion = !version.endsWith("SNAPSHOT")
     }
 
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     dependencies {
         api "org.mnode.ical4j:ical4j:$ical4jVersion",
-                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion"
+                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion",
+                "org.ical4j:ical4j-serializer:$ical4jSerializerVersion"
 
         implementation "commons-io:commons-io:$commonsIoVersion"
-
-        implementation ("org.eclipse.jetty:jetty-server:$jettyVersion") {
-            exclude group: 'org.slf4j', module: 'slf4j-api'
-        }
-        implementation ("org.eclipse.jetty:jetty-servlet:$jettyVersion") {
-            exclude group: 'org.slf4j', module: 'slf4j-api'
-        }
-
-        implementation "info.picocli:picocli:$picocliVersion"
 
         compileOnly 'org.osgi:osgi.core:8.0.0',
                 'org.osgi:org.osgi.service.component.annotations:1.5.0',
@@ -70,20 +77,14 @@ iCalendar support for integration architectures like Apache Camel
 
     }
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier.set('javadoc')
-        from 'build/docs/javadoc'
-    }
-
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allSource
-        archiveClassifier.set('sources')
-    }
-
-    artifacts {
-        archives jar
-        archives javadocJar
-        archives sourcesJar
+    jar {
+        manifest {
+            attributes (
+                    'Implementation-Title': 'iCal4j Integration',
+                    'Implementation-Version': version,
+                    'Implementation-Vendor': 'Ben Fortuna'
+            )
+        }
     }
 
     test {
@@ -103,8 +104,6 @@ iCalendar support for integration architectures like Apache Camel
         publications {
             "$name"(MavenPublication) {
                 from components.java
-                artifact javadocJar
-                artifact sourcesJar
                 pom.withXml {
                     asNode().appendNode('name', name)
                     asNode().appendNode('description', description)

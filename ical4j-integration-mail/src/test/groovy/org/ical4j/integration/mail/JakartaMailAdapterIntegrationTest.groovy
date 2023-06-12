@@ -8,7 +8,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 @Testcontainers
-class CalendarMailTransportIntegrationTest extends Specification {
+class JakartaMailAdapterIntegrationTest extends Specification {
 
     @Shared
     GenericContainer mailhog = new GenericContainer('mailhog/mailhog')
@@ -28,15 +28,17 @@ class CalendarMailTransportIntegrationTest extends Specification {
 
     def 'assert send calendar functionality works'() {
         given: 'a calendar mail transport instance'
-        CalendarMailTransport transport = [session, null]
-        transport.withMessageTemplate(new MessageTemplate()
-                .withFromAddress("sender@example.com")
-                .withToAddress("recipient@example.com")
-                .withSubject("Test calendar mail transport send")
-                .withTextBody("This is an integration test"))
+        CalendarMessageBuilder builder = new CalendarMessageBuilder().withSession(session)
+            .withTemplate(new MessageTemplate()
+                    .withFromAddress("sender@example.com")
+                    .withToAddress("recipient@example.com")
+                    .withSubject("Test calendar mail transport send")
+                    .withTextBody("This is an integration test"))
+
+        JakartaMailAdapter channel = [session, builder, null]
 
         when: 'a calendar is submitted'
-        transport.send(new ContentBuilder().calendar() {
+        channel.send(() -> new ContentBuilder().calendar() {
             prodid '-//Ben Fortuna//iCal4j 3.1//EN'
             version '2.0'
             method 'PUBLISH'

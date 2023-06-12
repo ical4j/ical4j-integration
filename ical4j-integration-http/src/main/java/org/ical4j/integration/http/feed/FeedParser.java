@@ -58,37 +58,37 @@ public class FeedParser {
         return calendar;
     }
 
-    private PropertyList<Property> setUid(PropertyList<Property> properties, String uid) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setUid(List<Property> properties, String uid) throws ParseException, IOException, URISyntaxException {
         properties.add(new Uid.Factory().createProperty(new ParameterList(), uid));
         return properties;
     }
 
-    private PropertyList<Property> setName(PropertyList<Property> properties, String name) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setName(List<Property> properties, String name) throws ParseException, IOException, URISyntaxException {
         properties.add(new Name.Factory().createProperty(new ParameterList(), name));
         return properties;
     }
 
-    private PropertyList<Property> setSummary(PropertyList<Property> properties, String summary) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setSummary(List<Property> properties, String summary) throws ParseException, IOException, URISyntaxException {
         properties.add(new Summary.Factory().createProperty(new ParameterList(), summary));
         return properties;
     }
 
-    private PropertyList<Property> setDescription(PropertyList<Property> properties, String description) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setDescription(List<Property> properties, String description) throws ParseException, IOException, URISyntaxException {
         properties.add(new Description.Factory().createProperty(new ParameterList(), description));
         return properties;
     }
 
-    private PropertyList<Property> setOrganizer(PropertyList<Property> properties, SyndPerson organizer) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setOrganizer(List<Property> properties, SyndPerson organizer) throws ParseException, IOException, URISyntaxException {
         properties.add(new Organizer.Factory().createProperty(new ParameterList(), organizer.getUri()));
         return properties;
     }
 
-    private PropertyList<Property> setContact(PropertyList<Property> properties, String contact) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setContact(List<Property> properties, String contact) throws ParseException, IOException, URISyntaxException {
         properties.add(new Contact.Factory().createProperty(new ParameterList(), contact));
         return properties;
     }
 
-    private PropertyList<Property> setCategories(PropertyList<Property> properties, List<SyndCategory> categoryList) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setCategories(List<Property> properties, List<SyndCategory> categoryList) throws ParseException, IOException, URISyntaxException {
         TextList categories = new TextList();
         for (SyndCategory category : categoryList) {
             categories.add(category.getName());
@@ -97,37 +97,37 @@ public class FeedParser {
         return properties;
     }
 
-    private PropertyList<Property> setSource(PropertyList<Property> properties, String source) {
+    private List<Property> setSource(List<Property> properties, String source) {
         properties.add(new Source.Factory().createProperty(new ParameterList(), source));
         return properties;
     }
 
-    private PropertyList<Property> setUrl(PropertyList<Property> properties, String url) throws ParseException, IOException, URISyntaxException {
+    private List<Property> setUrl(List<Property> properties, String url) throws ParseException, IOException, URISyntaxException {
         properties.add(new Url.Factory().createProperty(new ParameterList(), url));
         return properties;
     }
 
-    private PropertyList<Property> setImage(PropertyList<Property> properties, SyndImage image) {
+    private List<Property> setImage(List<Property> properties, SyndImage image) {
         properties.add(new Image.Factory().createProperty(new ParameterList(), image.getUrl()));
         return properties;
     }
 
-    private PropertyList<Property> setImage(PropertyList<Property> properties, MediaContent image) {
+    private List<Property> setImage(List<Property> properties, MediaContent image) {
         properties.add(new Image(new ParameterList(), ((UrlReference) image.getReference()).getUrl().toString()));
         return properties;
     }
 
-    private PropertyList<Property> setLastModified(PropertyList<Property> properties, Date date) {
-        properties.add(new LastModified(new DateTime(date)));
+    private List<Property> setLastModified(List<Property> properties, Date date) {
+        properties.add(new LastModified(new DateTime(date).toInstant()));
         return properties;
     }
 
-    private PropertyList<Property> setDtStamp(PropertyList<Property> properties, Date date) {
-        properties.add(new DtStamp(new DateTime(date)));
+    private List<Property> setDtStamp(List<Property> properties, Date date) {
+        properties.add(new DtStamp(new DateTime(date).toInstant()));
         return properties;
     }
 
-    private PropertyList<Property> setRefreshInterval(PropertyList<Property> properties, TemporalAmount refreshInterval) {
+    private List<Property> setRefreshInterval(List<Property> properties, TemporalAmount refreshInterval) {
         properties.add(new RefreshInterval(new ParameterList(), refreshInterval));
         return properties;
     }
