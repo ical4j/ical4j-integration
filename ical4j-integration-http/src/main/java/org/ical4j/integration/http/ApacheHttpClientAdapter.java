@@ -5,12 +5,13 @@ import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.ical4j.integration.ChannelAdapter;
+import org.ical4j.integration.ChannelConsumer;
 
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ApacheHttpClientAdapter<T> implements ChannelAdapter<T> {
+public class ApacheHttpClientAdapter<T> implements ChannelAdapter<T>, ChannelConsumer<T> {
 
     private final HttpClient httpClient;
 
@@ -29,7 +30,7 @@ public class ApacheHttpClientAdapter<T> implements ChannelAdapter<T> {
     }
 
     @Override
-    public boolean receive(Consumer<T> consumer, long timeout, boolean autoExpunge) {
+    public boolean consume(Consumer<T> consumer, long timeout, boolean autoExpunge) {
         try {
             consumer.accept(httpClient.execute(httpHost, requestBuilder.build(), responseHandler));
         } catch (IOException e) {
@@ -39,7 +40,7 @@ public class ApacheHttpClientAdapter<T> implements ChannelAdapter<T> {
     }
 
     @Override
-    public boolean send(Supplier<T> supplier) {
+    public boolean publish(Supplier<T> supplier) {
         HttpRequest request = requestBuilder.build();
         try {
             httpClient.execute(httpHost, request, response -> response.getStatusLine().getStatusCode() >= 200);

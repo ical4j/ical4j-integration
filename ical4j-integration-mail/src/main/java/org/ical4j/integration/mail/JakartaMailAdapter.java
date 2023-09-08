@@ -3,6 +3,7 @@ package org.ical4j.integration.mail;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import org.ical4j.integration.ChannelAdapter;
+import org.ical4j.integration.ChannelConsumer;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -11,9 +12,7 @@ import java.util.function.Supplier;
 /**
  * A channel adapter implementation capable of sending and receiving content via email.
  */
-public class JakartaMailAdapter<T> implements ChannelAdapter<T> {
-
-    private final Session session;
+public class JakartaMailAdapter<T> extends AbstractJakartaMailIntegration implements ChannelAdapter<T>, ChannelConsumer<T> {
 
     private final MimeMessageBuilder<T> builder;
 
@@ -24,13 +23,13 @@ public class JakartaMailAdapter<T> implements ChannelAdapter<T> {
     }
 
     public JakartaMailAdapter(Session session, MimeMessageBuilder<T> builder, MimeMessageParser<T> parser) {
-        this.session = session;
+        super(session);
         this.builder = builder;
         this.parser = parser;
     }
 
     @Override
-    public boolean send(Supplier<T> supplier) {
+    public boolean publish(Supplier<T> supplier) {
         try {
             Transport.send(builder.withContent(supplier.get()).build());
             return true;
@@ -40,9 +39,9 @@ public class JakartaMailAdapter<T> implements ChannelAdapter<T> {
     }
 
     @Override
-    public boolean receive(Consumer<T> consumer, long timeout, boolean autoExpunge) {
+    public boolean consume(Consumer<T> consumer, long timeout, boolean autoExpunge) {
         try {
-            Store store = session.getStore();
+            Store store = getSession().getStore();
             Folder inbox = store.getDefaultFolder();
             if (inbox.hasNewMessages()) {
                 for (int i = 0; i < inbox.getNewMessageCount(); i++) {

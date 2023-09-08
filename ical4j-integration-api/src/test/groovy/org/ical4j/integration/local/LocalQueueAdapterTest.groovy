@@ -13,9 +13,9 @@ class LocalQueueAdapterTest extends Specification {
         ChannelAdapter<Calendar> queue = new LocalQueueAdapter<>(new LinkedList<Calendar>())
 
         when: 'a calendar is sent to the queue'
-        queue.send {new Calendar()}
+        queue.publish {new Calendar()}
         Calendar received
-        boolean success = queue.receive({ c -> received = c }, 0)
+        boolean success = queue.consume({ c -> received = c }, 0)
 
         then: 'it was received successfully'
         success && received != null
@@ -27,9 +27,9 @@ class LocalQueueAdapterTest extends Specification {
 
         when: 'a receive is attempted from the queue'
         Calendar received
-        boolean success = queue.receive({ c -> received = c }, 0)
+        boolean success = queue.consume({ c -> received = c }, 0)
 
-        then: 'it was received successfully'
+        then: 'nothing was received'
         !success && received == null
     }
 
@@ -39,9 +39,9 @@ class LocalQueueAdapterTest extends Specification {
 
         when: 'a receive is attempted from the queue with a 5 second timeout'
         Calendar received
-        boolean success = queue.receive({ c -> received = c }, 5, true)
+        boolean success = queue.consume({ c -> received = c }, 5, true)
 
-        then: 'it was received successfully'
+        then: 'nothing was received'
         !success && received == null
     }
 }

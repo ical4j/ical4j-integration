@@ -1,6 +1,7 @@
 package org.ical4j.integration.local;
 
 import org.ical4j.integration.ChannelAdapter;
+import org.ical4j.integration.ChannelConsumer;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class LocalQueueAdapter<T> implements ChannelAdapter<T> {
+public class LocalQueueAdapter<T> implements ChannelAdapter<T>, ChannelConsumer<T> {
 
     private final Queue<T> queue;
 
@@ -19,12 +20,12 @@ public class LocalQueueAdapter<T> implements ChannelAdapter<T> {
     }
 
     @Override
-    public boolean send(Supplier<T> supplier) {
+    public boolean publish(Supplier<T> supplier) {
         return queue.add(supplier.get());
     }
 
     @Override
-    public boolean receive(Consumer<T> consumer, long timeout, boolean autoExpunge) {
+    public boolean consume(Consumer<T> consumer, long timeout, boolean autoExpunge) {
         T message;
         try {
             if (autoExpunge) {

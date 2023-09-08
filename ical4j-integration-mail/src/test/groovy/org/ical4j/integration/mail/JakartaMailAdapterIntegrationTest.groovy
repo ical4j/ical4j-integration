@@ -38,7 +38,7 @@ class JakartaMailAdapterIntegrationTest extends Specification {
         JakartaMailAdapter channel = [session, builder, null]
 
         when: 'a calendar is submitted'
-        channel.send(() -> new ContentBuilder().calendar() {
+        channel.publish(() -> new ContentBuilder().calendar() {
             prodid '-//Ben Fortuna//iCal4j 3.1//EN'
             version '2.0'
             method 'PUBLISH'
