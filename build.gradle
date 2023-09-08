@@ -1,6 +1,6 @@
 plugins {
     id 'signing'
-    id 'pl.allegro.tech.build.axion-release' version '1.13.1'
+    id 'pl.allegro.tech.build.axion-release' version '1.15.1'
     id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
     id 'org.javamodularity.moduleplugin' version '1.8.10' apply false
 }
@@ -34,8 +34,8 @@ configure(subprojects) {
         }
     }
 
-    sourceCompatibility = 8
-    targetCompatibility = 8
+    sourceCompatibility = 9
+    targetCompatibility = 9
 
     group = 'org.ical4j'
     description = '''\
