@@ -2,6 +2,7 @@ package org.ical4j.integration.local
 
 import net.fortuna.ical4j.model.Calendar
 import org.ical4j.integration.ChannelAdapter
+import org.ical4j.integration.ChannelConsumer
 import spock.lang.Specification
 
 import java.util.concurrent.ArrayBlockingQueue
@@ -23,7 +24,7 @@ class LocalQueueAdapterTest extends Specification {
 
     def 'test receive calendar on empty local queue'() {
         given: 'a local queue'
-        ChannelAdapter<Calendar> queue = new LocalQueueAdapter<>(new LinkedList<Calendar>())
+        ChannelConsumer<Calendar> queue = new LocalQueueAdapter<>(new LinkedList<Calendar>())
 
         when: 'a receive is attempted from the queue'
         Calendar received
@@ -35,7 +36,7 @@ class LocalQueueAdapterTest extends Specification {
 
     def 'test receive calendar on blocking local queue'() {
         given: 'a local queue'
-        ChannelAdapter<Calendar> queue = new LocalQueueAdapter<>(new ArrayBlockingQueue<Calendar>(1))
+        ChannelConsumer<Calendar> queue = new LocalQueueAdapter<>(new ArrayBlockingQueue<Calendar>(1))
 
         when: 'a receive is attempted from the queue with a 5 second timeout'
         Calendar received
