@@ -1,6 +1,6 @@
 package org.ical4j.integration.local;
 
-import org.ical4j.integration.ChannelPublisher;
+import org.ical4j.integration.flow.ChannelPublisher;
 
 import java.util.Queue;
 import java.util.concurrent.Executor;

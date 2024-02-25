@@ -35,6 +35,7 @@ class LocalQueuePublisherTest extends Specification {
 
         when: 'a calendar is sent to the queue'
         queue.submit(new Calendar())
+        queue.close()
 
         then: 'calendar is received by subscriber'
         received != null
