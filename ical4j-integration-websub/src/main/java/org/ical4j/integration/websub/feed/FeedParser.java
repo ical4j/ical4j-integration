@@ -1,4 +1,4 @@
-package org.ical4j.integration.http.feed;
+package org.ical4j.integration.websub.feed;
 
 import com.rometools.modules.mediarss.MediaEntryModule;
 import com.rometools.modules.mediarss.types.MediaContent;
