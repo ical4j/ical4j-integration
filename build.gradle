@@ -26,6 +26,7 @@ configure(subprojects) {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven {
             url 'https://s01.oss.sonatype.org/content/repositories/snapshots'
         }
@@ -34,8 +35,8 @@ configure(subprojects) {
         }
     }
 
-    sourceCompatibility = 9
-    targetCompatibility = 9
+    sourceCompatibility = 11
+    targetCompatibility = 11
 
     group = 'org.ical4j'
     description = '''\
@@ -54,19 +55,18 @@ iCalendar support for integration architectures like Apache Camel
 
     dependencies {
         api "org.mnode.ical4j:ical4j:$ical4jVersion",
-                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion",
-                "org.ical4j:ical4j-serializer:$ical4jSerializerVersion"
+                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion"
 
         implementation "commons-io:commons-io:$commonsIoVersion"
 
-        compileOnly 'org.osgi:osgi.core:8.0.0',
+        annotationProcessor 'org.osgi:osgi.core:8.0.0',
                 'org.osgi:org.osgi.service.component.annotations:1.5.0',
                 'org.osgi:org.osgi.service.metatype.annotations:1.4.1',
                 'org.osgi:org.osgi.annotation:6.0.0'
 
         testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
 
-        testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+        testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
                 "org.spockframework:spock-core",
                 "org.slf4j:slf4j-log4j12:$slf4jVersion",
                 "org.apache.logging.log4j:log4j:$log4jVersion"
@@ -87,7 +87,17 @@ iCalendar support for integration architectures like Apache Camel
         }
     }
 
+    compileTestJava {
+        moduleOptions {
+            compileOnClasspath = true
+        }
+    }
+
     test {
+        moduleOptions {
+            runOnClasspath = true
+        }
+
         useJUnitPlatform()
     }
 
