@@ -6,60 +6,51 @@ A Java API for iCalendar transport protocol integrations.
 
 ## Overview
 
-Whilst iCal4j provides support for data interoperability via the iCalendar specifation,
-we also need shared transport protocols to exchange data between applications. There are many
-proven [Enterprise Integration Patterns] in use today, and this project provides
-support for some of the more common integration approaches.
+Where the main iCal4j library provides support for data interoperability via the iCalendar specification,
+this library focuses on transport protocols and patterns to exchange data between applications. There are many
+proven [Enterprise Integration Patterns] in use today, and this project provides support for some of these common
+integration approaches.
 
-### Messaging Polling Model
+### Message Producer
 
-The most common means of exchanging iCalendar data is via Email, which is a form of
+A common use case for iCal4j is to send calendar invites via email to attendees. The `ChannelAdapter` interface
+defines a common contract for sending data via email, or other implementations of underlying transport protocols.
+
+
+### Message Polling
+
+The most common method of exchanging iCalendar data is email, which is a kind of
 asynchronous message queue. Messages are retrieved via polling the "queue" (i.e. Inbox)
-and iCalendar data is extracted from attachments, etc.
+and iCalendar data is extracted from attachments.
 
-### Publish/Subscribe Model
+Implementations of the `ChannelConsumer` interface provide support for message polling, whilst abstracting the
+complexities of the underlying transports.
 
-Another common pattern for exchanging data asynchronously is the Publish/Subscribe model, whereby
-data is published to a shared channel and subscribers listen on that channel. A message
-Topic is a common implementation of this, and is supported by many queue implementations.
 
-### Webhooks
+### Reactive Streams
 
-Webhooks are a special type of Publish/Subscribe model, whereby the publishing target is
-configured per subscriber. As such it is usually implemented as a single-subscriber
-pubsub model.
+Java Reactive Streams provides support for the Publisher/Subscriber pattern, which is another asynchronous
+messaging pattern for sharing data with multiple consumers.
 
-## Usage
-
-The iCal4j Integration API provides two primary interfaces that support the implementation
-of the different integration models described above. These interfaces are implemented by
-most of the concrete integrations and aim to simplify the integration with different
-transport mechanisms.
-
-### Channel Adapter
-
-The Channel Adapter interface supports sending or receiving data. It
-defines methods used to publish and consume messages via the integration point.
-
-### Channel Subscriber
-
-The Channel Subscriber interface provides support for subscribers via the Publish/Subscribe model.
+Implementors of the `ChannelPublisher` interface provide support for subscribing multiple consumers to a data
+stream.
 
 
 ## Examples
 
-### HTTP
+### Webhooks
 
-Publish calendar object to HTTP target:
+Publish calendar object to webhook target:
 
     Calendar calendar = ...
     ChannelAdapter<Calendar> producer = new ApacheHttpClientAdapter(null, "POST", "http://ical.example.com");
-    producer.send(calendar);
+    producer.publish(() -> calendar);
 
 Consume calendar object from HTTP endpoint:
 
-    ChannelAdapter<Calendar> consumer = new ApacheHttpClientAdapter("http://tzurl.org/zoneinfo/Australia/Melbourne");
-    Calendar calendar = consumer.poll(30);
+    Calendar calendar = null;
+    ChannelConsumer<Calendar> consumer = new ApacheHttpClientAdapter("http://tzurl.org/zoneinfo/Australia/Melbourne");
+    Calendar calendar = consumer.accept(c -> calendar = c, 30);
 
 
 ### Email
@@ -73,11 +64,12 @@ Publish calendar object via email:
 
 Consume calendar object delivered to an email address:
 
+    Calendar calendar = null;
     Session session = ...
-    ChannelAdapter<Calendar> consumer = new JakartaMailAdapter(session);
-    Calendar calendar = consumer.poll(30);
+    ChannelConsumer<Calendar> consumer = new JakartaMailAdapter(session);
+    Calendar calendar = consumer.consume(c -> calendar = c, 30);
 
-Listen for calendar objects delivered to an email address:
+Subscribe to calendar objects delivered to an email address:
 
 TBD.
 
