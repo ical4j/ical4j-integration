@@ -4,4 +4,6 @@ module ical4j.integration.mail {
 
     requires jakarta.mail;
     requires org.slf4j;
+
+    exports org.ical4j.integration.mail;
 }
