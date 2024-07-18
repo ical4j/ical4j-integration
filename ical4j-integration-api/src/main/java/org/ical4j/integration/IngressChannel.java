@@ -1,17 +1,15 @@
 package org.ical4j.integration;
 
 import java.io.IOException;
-import java.util.concurrent.Flow;
+import java.util.function.Consumer;
 
 /**
  * Implementors support consumption of channel data via polling. Some {@link EgressChannel} implementations
  * will also support polling via implementing this interface.
  */
-public interface IngressChannel<T> extends Flow.Publisher<T> {
+public interface IngressChannel<T> {
 
-    default boolean poll(long timeout) {
-        return poll(timeout, false);
-    }
+    boolean poll(Consumer<T> consumer, long timeout);
 
     /**
      * Invoke retrieval of calendar data via supported transport protocol.
@@ -19,7 +17,7 @@ public interface IngressChannel<T> extends Flow.Publisher<T> {
      * @return the retrieved calendar data
      * @throws IOException if data retrieval fails
      */
-    default boolean poll(long timeout, boolean autoExpunge) {
+    default boolean poll(Consumer<T> consumer, long timeout, boolean autoExpunge) {
         throw new UnsupportedOperationException("This channel doesn't support polling.");
     }
 
