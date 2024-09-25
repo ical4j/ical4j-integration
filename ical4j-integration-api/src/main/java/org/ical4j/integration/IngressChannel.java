@@ -28,6 +28,6 @@ public interface IngressChannel<T> {
      */
     default boolean expunge(String uid) {
         throw new UnsupportedOperationException("This channel doesn't support expunging. "
-                + "You must call receive with autoExpunge=true to remove messages from the queue");
+                + "You must call receive with autoExpunge=true to remove messages from the channel");
     }
 }

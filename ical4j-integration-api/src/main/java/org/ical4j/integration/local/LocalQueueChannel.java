@@ -21,11 +21,7 @@ public class LocalQueueChannel<T> implements EgressChannel<T>, IngressChannel<T>
 
     @Override
     public boolean send(Supplier<T> supplier) {
-        if (queue.add(supplier.get())) {
-            return true;
-        } else {
-            return false;
-        }
+        return queue.add(supplier.get());
     }
 
     @Override
