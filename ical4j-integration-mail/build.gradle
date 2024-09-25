@@ -1,5 +1,6 @@
 
 dependencies {
-    api project(":ical4j-integration-api"),
-            "com.sun.mail:jakarta.mail:$javamailVersion"
+    api project(":ical4j-integration-api")
+
+    api "com.sun.mail:jakarta.mail:$javamailVersion"
 }

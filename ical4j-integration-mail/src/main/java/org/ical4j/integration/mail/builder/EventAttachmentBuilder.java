@@ -1,4 +1,4 @@
-package org.ical4j.integration.mail;
+package org.ical4j.integration.mail.builder;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -20,11 +20,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface MimeMessageBuilders {
+public class EventAttachmentBuilder implements Function<Calendar, Optional<MimeMessage>> {
 
-    Logger LOGGER = LoggerFactory.getLogger(MimeMessageBuilders.class);
+    Logger LOGGER = LoggerFactory.getLogger(EventAttachmentBuilder.class);
 
-    Function<Calendar, Optional<MimeMessage>> EVENT_ATTACHMENT = (calendar -> {
+    @Override
+    public Optional<MimeMessage> apply(Calendar calendar) {
         try {
             Optional<VEvent> event = calendar.getComponent("VEVENT");
             if (event.isPresent()) {
@@ -67,8 +68,8 @@ public interface MimeMessageBuilders {
                 return Optional.of(message);
             }
         } catch (IOException | MessagingException e) {
-           LOGGER.error("Unexpected error", e);
+            LOGGER.error("Unexpected error", e);
         }
         return Optional.empty();
-    });
+    }
 }

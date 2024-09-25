@@ -1,4 +1,4 @@
-package org.ical4j.integration.mail;
+package org.ical4j.integration.mail.processor;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
@@ -17,11 +17,12 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface MimeMessageProcessors {
+public class CalendarAttachmentProcessor implements Function<MimeMessage, Optional<Calendar>> {
 
-    Logger LOGGER = LoggerFactory.getLogger(MimeMessageProcessors.class);
+    Logger LOGGER = LoggerFactory.getLogger(CalendarAttachmentProcessor.class);
 
-    Function<MimeMessage, Optional<Calendar>> CALENDAR_ATTACHMENT = (mimeMessage -> {
+    @Override
+    public Optional<Calendar> apply(MimeMessage mimeMessage) {
         try {
             Multipart multiPart = (Multipart) mimeMessage.getContent();
             int numberOfParts = multiPart.getCount();
@@ -39,5 +40,5 @@ public interface MimeMessageProcessors {
             LOGGER.error("Invalid attachment", e);
         }
         return Optional.empty();
-    });
+    }
 }
