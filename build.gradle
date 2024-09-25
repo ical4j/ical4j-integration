@@ -68,7 +68,8 @@ iCalendar support for integration architectures like Apache Camel
 
         testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
                 "org.spockframework:spock-core",
-                "org.apache.logging.log4j:log4j-core:$log4jVersion"
+                "org.apache.logging.log4j:log4j-core:$log4jVersion",
+                "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion"
 
         // testcontainers
         testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
