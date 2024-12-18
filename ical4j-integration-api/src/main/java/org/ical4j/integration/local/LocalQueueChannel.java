@@ -2,16 +2,16 @@ package org.ical4j.integration.local;
 
 import org.ical4j.integration.EgressChannel;
 import org.ical4j.integration.IngressChannel;
-import org.ical4j.integration.flow.ChannelPublisher;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class LocalQueueChannel<T> extends ChannelPublisher<T> implements EgressChannel<T, T>, IngressChannel<T> {
+public class LocalQueueChannel<T> implements EgressChannel<T>, IngressChannel<T> {
 
     private final Queue<T> queue;
 
@@ -21,16 +21,16 @@ public class LocalQueueChannel<T> extends ChannelPublisher<T> implements EgressC
 
     @Override
     public boolean send(Supplier<T> supplier) {
-        if (queue.add(supplier.get())) {
-            submit(supplier.get());
-            return true;
-        } else {
-            return false;
-        }
+        return queue.add(supplier.get());
     }
 
     @Override
-    public boolean poll(long timeout, boolean autoExpunge) {
+    public boolean poll(Consumer<T> consumer, long timeout) {
+        return poll(consumer, timeout, false);
+    }
+
+    @Override
+    public boolean poll(Consumer<T> consumer, long timeout, boolean autoExpunge) {
         T message;
         try {
             if (autoExpunge) {
@@ -42,7 +42,7 @@ public class LocalQueueChannel<T> extends ChannelPublisher<T> implements EgressC
             } else {
                 message = Objects.requireNonNull(queue.peek());
             }
-            submit(message);
+            consumer.accept(message);
             return true;
         } catch (InterruptedException | NullPointerException e) {
             LoggerFactory.getLogger(LocalQueueChannel.class).info("No data", e);

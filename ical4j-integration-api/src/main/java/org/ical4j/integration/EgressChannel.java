@@ -1,17 +1,16 @@
 package org.ical4j.integration;
 
-import java.util.concurrent.Flow;
 import java.util.function.Supplier;
 
 /**
- * Implementors support content adaptation for transport over a supported channel.
- * @param <T> the payload type
- * @param <P> the published message type following successful sending of a payload
+ * Implementors provide a transport mechanism for supported data objects. Typical
+ * implementations would support transfer of iCalendar or vCard objects.
+ * @param <T> the object type
  */
-public interface EgressChannel<T, P> extends Flow.Publisher<P> {
+public interface EgressChannel<T> {
 
     /**
-     * Invoke transfer of data via supported transport protocol.
+     * Invoke transfer of data via the supported transport protocol.
      * @param supplier source of data to transfer
      */
     boolean send(Supplier<T> supplier);

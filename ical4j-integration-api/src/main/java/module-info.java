@@ -7,6 +7,5 @@ module ical4j.integration.api {
 
     exports org.ical4j.integration;
     exports org.ical4j.integration.event;
-    exports org.ical4j.integration.flow;
     exports org.ical4j.integration.local;
 }

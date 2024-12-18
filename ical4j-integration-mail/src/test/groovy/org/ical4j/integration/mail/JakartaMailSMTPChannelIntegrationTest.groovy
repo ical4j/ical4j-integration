@@ -5,6 +5,7 @@ import jakarta.mail.Session
 import jakarta.mail.internet.MimeMessage
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.ContentBuilder
+import org.ical4j.integration.mail.builder.EventAttachmentBuilder
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.spock.Testcontainers
 import spock.lang.Shared
@@ -39,7 +40,7 @@ class JakartaMailSMTPChannelIntegrationTest extends Specification {
 //                    .withTextBody("This is an integration test"))
 //
         JakartaMailSMTPChannel channel = [(Calendar c) -> {
-            Optional<MimeMessage> message = MimeMessageBuilders.EVENT_ATTACHMENT.apply(c)
+            Optional<MimeMessage> message = new EventAttachmentBuilder().apply(c)
             if (message.isPresent()) {
                 message.get().setFrom("sender@example.com")
                 message.get().setRecipients(Message.RecipientType.TO, "recipient@example.com")

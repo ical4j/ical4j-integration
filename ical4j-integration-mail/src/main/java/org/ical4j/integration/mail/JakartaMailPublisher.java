@@ -6,15 +6,21 @@ import jakarta.mail.event.ConnectionListener;
 import jakarta.mail.event.MessageCountEvent;
 import jakarta.mail.event.MessageCountListener;
 import jakarta.mail.internet.MimeMessage;
-import org.ical4j.integration.IngressChannel;
-import org.ical4j.integration.flow.ChannelPublisher;
+import net.fortuna.ical4j.model.Calendar;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.function.Function;
 
-public class JakartaMailListenerChannel extends ChannelPublisher<MimeMessage>
-        implements IngressChannel<MimeMessage>, MessageCountListener, ConnectionListener {
+public class JakartaMailPublisher extends SubmissionPublisher<Calendar>
+        implements MessageCountListener, ConnectionListener {
 
-    public JakartaMailListenerChannel(Session session, URLName...folders) {
+    private final Function<MimeMessage, Optional<Calendar>> messageProcessor;
+
+    public JakartaMailPublisher(Session session, Function<MimeMessage, Optional<Calendar>> messageProcessor,
+                                URLName...folders) {
+        this.messageProcessor = messageProcessor;
         try {
             session.getStore().addConnectionListener(this);
             Arrays.stream(folders).forEach(f -> {
@@ -33,7 +39,7 @@ public class JakartaMailListenerChannel extends ChannelPublisher<MimeMessage>
     public void messagesAdded(MessageCountEvent e) {
         for (Message message : e.getMessages()) {
             if (message instanceof MimeMessage) {
-                submit((MimeMessage) message);
+                messageProcessor.apply((MimeMessage) message).ifPresent(this::submit);
             }
         }
     }

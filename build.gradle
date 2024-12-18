@@ -2,7 +2,6 @@ plugins {
     id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.15.1'
     id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
-    id 'org.javamodularity.moduleplugin' version '1.8.10' apply false
 }
 
 scmVersion {
@@ -22,7 +21,6 @@ configure(subprojects) {
     apply plugin: 'maven-publish'
     apply plugin: 'groovy'
     apply plugin: 'biz.aQute.bnd.builder'
-    apply plugin: 'org.javamodularity.moduleplugin'
 
     repositories {
         mavenCentral()
@@ -68,7 +66,8 @@ iCalendar support for integration architectures like Apache Camel
 
         testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
                 "org.spockframework:spock-core",
-                "org.apache.logging.log4j:log4j-core:$log4jVersion"
+                "org.apache.logging.log4j:log4j-core:$log4jVersion",
+                "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion"
 
         // testcontainers
         testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
@@ -86,17 +85,7 @@ iCalendar support for integration architectures like Apache Camel
         }
     }
 
-    compileTestJava {
-        moduleOptions {
-            compileOnClasspath = true
-        }
-    }
-
     test {
-        moduleOptions {
-            runOnClasspath = true
-        }
-
         useJUnitPlatform()
     }
 
@@ -105,7 +94,12 @@ iCalendar support for integration architectures like Apache Camel
             options.addStringOption('Xdoclint:none', '-quiet')
         }
         options {
-            links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+            links 'https://docs.oracle.com/en/java/javase/11/docs/api/',
+                    'https://javadoc.io/doc/org.mnode.ical4j/ical4j/latest',
+                    'https://javadoc.io/doc/org.mnode.ical4j/ical4j-vcard/latest',
+                    'https://javadoc.io/doc/com.sun.mail/jakarta.mail/latest',
+                    'https://javadoc.io/doc/jakarta.servlet/jakarta.servlet-api/latest',
+                    'https://javadoc.io/doc/org.igniterealtime.smack/smack-core/latest'
         }
     }
 

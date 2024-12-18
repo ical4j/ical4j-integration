@@ -15,11 +15,10 @@ class JakartaMailSMTPChannelTest extends Specification {
                 .withProperty(ImmutableMethod.PUBLISH).fluentTarget
 
         when: 'the calendar is published'
-        EgressChannel<Calendar, MimeMessage> channel = new JakartaMailSMTPChannel<>((c) -> {
+        EgressChannel<Calendar> channel = new JakartaMailSMTPChannel((c) -> {
             return Optional.of(new MimeMessage(null))
         })
         channel.send {calendar}
-        channel.close()
 
         then: 'no errors are raised'
 
