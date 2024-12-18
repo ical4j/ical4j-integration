@@ -24,7 +24,10 @@ public class LocalQueuePublisher<T extends Serializable> extends SubmissionPubli
                 if (queue instanceof BlockingQueue) {
                     submit(((BlockingQueue<T>) queue).poll(1000, TimeUnit.SECONDS));
                 } else {
-                    submit(this.queue.poll());
+                    T next = this.queue.poll();
+                    if (next != null) {
+                        submit(next);
+                    }
                 }
             } catch (InterruptedException | NullPointerException e) {
                 LoggerFactory.getLogger(LocalQueuePublisher.class).info("No data", e);
