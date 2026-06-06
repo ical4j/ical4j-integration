@@ -1,20 +1,25 @@
-name: Publish snapshots
+name: Publish release to Maven Central
 
+# Triggered by a release tag, independently of the GitHub Release workflow.
 on:
   push:
-    branches:
-      - 'develop'
+    tags:
+      - "ical4j-integration-*"
+      - "!ical4j-integration-*-pre"
+  workflow_dispatch:
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
-  gradle:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          # Full history + tags so axion-release resolves the snapshot version.
+          # Full history + tags so axion-release resolves the release version from the tag.
           fetch-depth: 0
+
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -23,7 +28,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Publish snapshot to Central Portal
+      - name: Publish to Maven Central
         run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
