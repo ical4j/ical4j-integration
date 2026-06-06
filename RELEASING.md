@@ -14,6 +14,11 @@ targeting the Sonatype **Central Portal** under the `org.ical4j` namespace.
 
 `publish-release.yml` can also be run manually via **workflow_dispatch**.
 
+> **Snapshots** must be enabled for the `org.ical4j` namespace in the Central Portal
+> (central.sonatype.com → namespace settings) before snapshot publishing will succeed.
+> Snapshot publishing to the Central Portal requires the vanniktech plugin **0.31.0+**
+> (this project uses 0.34.0, which requires **Gradle 8.5+**).
+
 The release version is derived from the tag by the
 [axion-release](https://github.com/allegro/axion-release-plugin) plugin, so the publish
 jobs check out with `fetch-depth: 0` to make tags available.

@@ -1,7 +1,7 @@
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.15.1'
     id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
-    id 'com.vanniktech.maven.publish' version '0.29.0' apply false
+    id 'com.vanniktech.maven.publish' version '0.34.0' apply false
 }
 
 scmVersion {
