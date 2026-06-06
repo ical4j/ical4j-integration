@@ -81,6 +81,10 @@ iCalendar support for integration architectures like Apache Camel
     }
 
     javadoc {
+        // External javadoc links are fetched at build time and 'latest' redirects can 404 on
+        // package-list, which would otherwise fail the publish. Don't let flaky link resolution
+        // (or stray @link warnings) break the build.
+        failOnError = false
         if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
@@ -88,9 +92,7 @@ iCalendar support for integration architectures like Apache Camel
             links 'https://docs.oracle.com/en/java/javase/11/docs/api/',
                     'https://javadoc.io/doc/org.mnode.ical4j/ical4j/latest',
                     'https://javadoc.io/doc/org.mnode.ical4j/ical4j-vcard/latest',
-                    'https://javadoc.io/doc/com.sun.mail/jakarta.mail/latest',
-                    'https://javadoc.io/doc/jakarta.servlet/jakarta.servlet-api/latest',
-                    'https://javadoc.io/doc/org.igniterealtime.smack/smack-core/latest'
+                    'https://javadoc.io/doc/com.sun.mail/jakarta.mail/latest'
         }
     }
 
