@@ -4,6 +4,9 @@
 
 A Java API for iCalendar transport protocol integrations.
 
+> Releases are published to [Maven Central](https://central.sonatype.com/) (group `org.ical4j`)
+> automatically when an `ical4j-integration-*` tag is pushed. See [RELEASING.md](RELEASING.md).
+
 ## Overview
 
 Where the main iCal4j library provides support for data interoperability via the iCalendar specification,
@@ -55,23 +58,32 @@ Consume calendar object from HTTP endpoint:
 
 ### Email
 
-Publish calendar object via email:
+> **Note:** As of this release the mail channels require an explicit Jakarta Mail `Session`
+> (constructors no longer fall back to `Session.getDefaultInstance(null)`), and outgoing messages
+> derive their `From`/`To`/`Cc` from the calendar's `ORGANIZER`/`ATTENDEE` properties following the
+> iTIP (RFC 5546) `METHOD` matrix. Any addressing you set explicitly on the message overrides the
+> derived values. This is a **breaking** change to the channel/builder constructor signatures.
 
-    Calendar calendar = ...
+Publish a calendar object via email (recipients derived from the calendar):
+
+    Calendar calendar = ...   // ORGANIZER + ATTENDEEs + METHOD:REQUEST
+    Session session = ...     // configured with mail.smtp.host / mail.smtp.port
+    EgressChannel<Calendar> producer = new JakartaMailSMTPChannel(session);
+    producer.send(() -> calendar);
+
+Consume a calendar object delivered to an email address (polling the INBOX):
+
+    Session session = ...     // configured with an IMAP store
+    IngressChannel<Calendar> consumer = new JakartaMailPollingChannel(session,
+            new CalendarAttachmentProcessor());
+    consumer.poll(calendar -> { /* handle */ }, 30);
+
+Subscribe to calendar objects delivered to an email address (reactive, IMAP IDLE):
+
     Session session = ...
-    ChannelAdapter<Calendar> producer = new JakartaMailAdapter(session);
-    producer.send(calendar);
-
-Consume calendar object delivered to an email address:
-
-    Calendar calendar = null;
-    Session session = ...
-    ChannelConsumer<Calendar> consumer = new JakartaMailAdapter(session);
-    Calendar calendar = consumer.consume(c -> calendar = c, 30);
-
-Subscribe to calendar objects delivered to an email address:
-
-TBD.
+    JakartaMailPublisher publisher = new JakartaMailPublisher(session,
+            new CalendarAttachmentProcessor(), "INBOX");
+    publisher.subscribe(subscriber);
 
 ### Apache Camel
 
