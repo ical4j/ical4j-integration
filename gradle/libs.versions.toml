@@ -4,6 +4,7 @@ ical4j-vcard = "2.1.0"
 groovy = "3.0.22"
 log4j = "2.23.1"
 spock = "2.4-M4-groovy-3.0"
+greenmail = "2.0.1"
 
 
 [libraries]
@@ -17,3 +18,5 @@ log4j-slf4j2 = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.
 
 spock-bom = { module = "org.spockframework:spock-bom", version.ref = "spock"}
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock"}
+
+greenmail = { module = "com.icegreen:greenmail", version.ref = "greenmail"}
