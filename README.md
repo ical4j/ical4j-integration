@@ -4,6 +4,9 @@
 
 A Java API for iCalendar transport protocol integrations.
 
+> Releases are published to [Maven Central](https://central.sonatype.com/) (group `org.ical4j`)
+> automatically when an `ical4j-integration-*` tag is pushed. See [RELEASING.md](RELEASING.md).
+
 ## Overview
 
 Where the main iCal4j library provides support for data interoperability via the iCalendar specification,
