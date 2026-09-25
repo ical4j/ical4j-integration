@@ -1,7 +1,7 @@
 plugins {
-    id 'signing'
     id 'pl.allegro.tech.build.axion-release' version '1.15.1'
     id 'biz.aQute.bnd.builder' version "$bndVersion" apply false
+    id 'com.vanniktech.maven.publish' version '0.34.0' apply false
 }
 
 scmVersion {
@@ -18,23 +18,17 @@ scmVersion {
 
 configure(subprojects) {
     apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
     apply plugin: 'groovy'
     apply plugin: 'biz.aQute.bnd.builder'
+    apply plugin: 'com.vanniktech.maven.publish'
 
     repositories {
         mavenCentral()
         mavenLocal()
         maven {
-            url 'https://s01.oss.sonatype.org/content/repositories/snapshots'
-        }
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            url 'https://central.sonatype.com/repository/maven-snapshots/'
         }
     }
-
-    sourceCompatibility = 11
-    targetCompatibility = 11
 
     group = 'org.ical4j'
     description = '''\
@@ -47,13 +41,12 @@ iCalendar support for integration architectures like Apache Camel
     }
 
     java {
-        withJavadocJar()
-        withSourcesJar()
+        sourceCompatibility = 11
+        targetCompatibility = 11
     }
 
     dependencies {
-        api "org.mnode.ical4j:ical4j:$ical4jVersion",
-                "org.mnode.ical4j:ical4j-vcard:$ical4jVCardVersion"
+        api libs.ical4j, libs.ical4j.vcard
 
         implementation "commons-io:commons-io:$commonsIoVersion"
 
@@ -62,12 +55,10 @@ iCalendar support for integration architectures like Apache Camel
                 'org.osgi:org.osgi.service.metatype.annotations:1.4.1',
                 'org.osgi:org.osgi.annotation:6.0.0'
 
-        testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+        testImplementation libs.groovy
 
-        testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
-                "org.spockframework:spock-core",
-                "org.apache.logging.log4j:log4j-core:$log4jVersion",
-                "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion"
+        testImplementation platform(libs.spock.bom), libs.spock.core,
+                libs.log4j.core, libs.log4j.slf4j2
 
         // testcontainers
         testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
@@ -90,6 +81,10 @@ iCalendar support for integration architectures like Apache Camel
     }
 
     javadoc {
+        // External javadoc links are fetched at build time and 'latest' redirects can 404 on
+        // package-list, which would otherwise fail the publish. Don't let flaky link resolution
+        // (or stray @link warnings) break the build.
+        failOnError = false
         if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
@@ -97,52 +92,42 @@ iCalendar support for integration architectures like Apache Camel
             links 'https://docs.oracle.com/en/java/javase/11/docs/api/',
                     'https://javadoc.io/doc/org.mnode.ical4j/ical4j/latest',
                     'https://javadoc.io/doc/org.mnode.ical4j/ical4j-vcard/latest',
-                    'https://javadoc.io/doc/com.sun.mail/jakarta.mail/latest',
-                    'https://javadoc.io/doc/jakarta.servlet/jakarta.servlet-api/latest',
-                    'https://javadoc.io/doc/org.igniterealtime.smack/smack-core/latest'
+                    'https://javadoc.io/doc/com.sun.mail/jakarta.mail/latest'
         }
     }
 
-    publishing {
-        publications {
-            "$name"(MavenPublication) {
-                from components.java
-                pom.withXml {
-                    asNode().appendNode('name', name)
-                    asNode().appendNode('description', description)
-                    asNode().appendNode('url', 'http://ical4j.github.io')
+    // Publishing to the Sonatype Central Portal is configured via the vanniktech plugin.
+    // Host, auto-release and signing toggles live in gradle.properties
+    // (SONATYPE_HOST, SONATYPE_AUTOMATIC_RELEASE, RELEASE_SIGNING_ENABLED).
+    // Credentials and the signing key are supplied via ORG_GRADLE_PROJECT_* env vars in CI.
+    mavenPublishing {
+        coordinates(group.toString(), project.name, version.toString())
 
-                    def scmNode = asNode().appendNode('scm')
-                    scmNode.appendNode('url', 'https://github.com/ical4j/ical4j-integration')
-                    scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j-integration.git')
-                    scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j-integration.git')
+        pom {
+            name = project.name
+            description = 'iCalendar support for integration architectures like Apache Camel'
+            url = 'http://ical4j.github.io'
 
-                    def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                    licenseNode.appendNode('name', 'iCal4j - License')
-                    licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
-                    licenseNode.appendNode('distribution', 'repo')
-
-                    def developerNode = asNode().appendNode('developers').appendNode('developer')
-                    developerNode.appendNode('id', 'fortuna')
-                    developerNode.appendNode('name', 'Ben Fortuna')
+            licenses {
+                license {
+                    name = 'iCal4j - License'
+                    url = 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
+                    distribution = 'repo'
                 }
             }
-        }
 
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = version.endsWith('SNAPSHOT') ? "https://s01.oss.sonatype.org/content/repositories/snapshots/" : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
+            developers {
+                developer {
+                    id = 'fortuna'
+                    name = 'Ben Fortuna'
                 }
             }
-        }
-    }
 
-    signing {
-        required { isReleaseVersion }
-        sign publishing.publications[name]
+            scm {
+                url = 'https://github.com/ical4j/ical4j-integration'
+                connection = 'scm:git@github.com:ical4j/ical4j-integration.git'
+                developerConnection = 'scm:git@github.com:ical4j/ical4j-integration.git'
+            }
+        }
     }
 }

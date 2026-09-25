@@ -3,4 +3,7 @@ dependencies {
     api project(":ical4j-integration-api")
 
     api "com.sun.mail:jakarta.mail:$javamailVersion"
+
+    // in-JVM SMTP + IMAP (with IDLE) mail server for round-trip tests
+    testImplementation libs.greenmail
 }

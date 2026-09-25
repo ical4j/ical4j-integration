@@ -6,4 +6,7 @@ module ical4j.integration.mail {
     requires org.slf4j;
 
     exports org.ical4j.integration.mail;
+    exports org.ical4j.integration.mail.address;
+    exports org.ical4j.integration.mail.builder;
+    exports org.ical4j.integration.mail.processor;
 }
