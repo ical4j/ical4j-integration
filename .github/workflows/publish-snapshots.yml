@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'develop'
+  # Manual re-publish, e.g. to refresh the snapshot without a code change.
+  workflow_dispatch:
 
 permissions: read-all
 
